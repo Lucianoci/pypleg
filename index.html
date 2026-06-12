@@ -1316,11 +1316,14 @@
     top: 68px; left: 0; right: 0;
     background: var(--red);
     border-top: 2px solid var(--red-dark);
-    z-index: 99;
+    z-index: 9999;
     padding: 1rem 0;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    max-height: calc(100vh - 68px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
-  .mobile-menu.open { display: block; }
+  .mobile-menu.open { display: block !important; }
   .mobile-menu a {
     display: block;
     color: white;
@@ -1532,12 +1535,12 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#historia" onclick="closeMobileMenu()">📚 Historia</a>
-  <a href="#noticias" onclick="closeMobileMenu()">📰 Noticias</a>
-  <a href="#proximos" onclick="closeMobileMenu()">🗓️ Sets</a>
-  <a href="#servicios" onclick="closeMobileMenu()">⚙️ Servicios</a>
-  <a href="#comunidad" onclick="closeMobileMenu()">🤝 Comunidad</a>
-  <a href="#comunidad" onclick="closeMobileMenu()">Unirse gratis →</a>
+  <a href="#historia" class="menu-link">📚 Historia</a>
+  <a href="#noticias" class="menu-link">📰 Noticias</a>
+  <a href="#proximos" class="menu-link">🗓️ Sets</a>
+  <a href="#servicios" class="menu-link">⚙️ Servicios</a>
+  <a href="#comunidad" class="menu-link">🤝 Comunidad</a>
+  <a href="#comunidad" class="menu-link">Unirse gratis →</a>
 </div>
 
 <!-- HERO -->
@@ -2053,9 +2056,18 @@
 
 <script>
   // ── Menú hamburguesa ──────────────────────────────────────
+  // Hamburger — definido globalmente para que esté disponible siempre
   function closeMobileMenu() {
-    document.getElementById('mobileMenu').classList.remove('open');
-    document.getElementById('hamburger').classList.remove('open');
+    var m = document.getElementById('mobileMenu');
+    var h = document.getElementById('hamburger');
+    if (m) { m.classList.remove('open'); m.style.display = ''; }
+    if (h) h.classList.remove('open');
+  }
+  function openMobileMenu() {
+    var m = document.getElementById('mobileMenu');
+    var h = document.getElementById('hamburger');
+    if (m) { m.classList.add('open'); m.style.display = 'block'; }
+    if (h) h.classList.add('open');
   }
 
   // ── Buscador ──────────────────────────────────────────────
@@ -2138,12 +2150,36 @@
 
   document.addEventListener('DOMContentLoaded', function() {
     // Hamburguesa
-    document.getElementById('hamburger').addEventListener('click', function() {
-      this.classList.toggle('open');
-      document.getElementById('mobileMenu').classList.toggle('open');
+    var hamburgerBtn = document.getElementById('hamburger');
+    var mobileMenuEl = document.getElementById('mobileMenu');
+
+    if (hamburgerBtn) {
+      hamburgerBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var isOpen = mobileMenuEl && mobileMenuEl.classList.contains('open');
+        if (isOpen) { closeMobileMenu(); } else { openMobileMenu(); }
+      });
+    }
+
+    // Cerrar al tocar fuera del menú
+    document.addEventListener('click', function(e) {
+      if (mobileMenuEl && mobileMenuEl.classList.contains('open')) {
+        if (!mobileMenuEl.contains(e.target) && e.target !== hamburgerBtn && !hamburgerBtn.contains(e.target)) {
+          closeMobileMenu();
+        }
+      }
     });
+
+    // Cerrar al hacer click en cualquier link del menú
+    document.querySelectorAll('.menu-link').forEach(function(link) {
+      link.addEventListener('click', function() {
+        closeMobileMenu();
+      });
+    });
+
+    // Cerrar al hacer scroll
     window.addEventListener('scroll', function() {
-      if (document.getElementById('mobileMenu').classList.contains('open')) closeMobileMenu();
+      if (mobileMenuEl && mobileMenuEl.classList.contains('open')) closeMobileMenu();
     }, { passive: true });
 
     // Buscador
