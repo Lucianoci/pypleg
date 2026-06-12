@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BrickVault — La comunidad LEGO</title>
+<style>
+  :root {
+    --red: #E3000B;
+    --yellow: #FFD700;
+    --yellow-dark: #E6B800;
+    --blue: #006CB7;
+    --green: #00A650;
+    --white: #FFFFFF;
+    --off-white: #F8F4EE;
+    --light-gray: #F0EBE0;
+    --mid-gray: #D0C8B8;
+    --dark-gray: #333333;
+    --text: #1A1A1A;
+    --muted: #666666;
+    --border: rgba(0,0,0,0.1);
+    --red-dark: #B0000A;
+    --yellow-shadow: #B89000;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--off-white);
+    color: var(--text);
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* STUD PATTERN — subtle on light bg */
+  .stud-bg {
+    background-image: radial-gradient(circle, rgba(0,0,0,0.06) 2px, transparent 2px);
+    background-size: 28px 28px;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--red);
+    box-shadow: 0 4px 0 var(--red-dark);
+  }
+
+  .nav-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-oval {
+    background: white;
+    border-radius: 50%;
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    border: 3px solid rgba(0,0,0,0.15);
+  }
+
+  .logo-oval-inner {
+    background: var(--red);
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(0,0,0,0.2);
+  }
+
+  .logo-oval-text {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 0.85rem;
+    color: white;
+    letter-spacing: 1px;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .logo-name {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 1.8rem;
+    color: white;
+    letter-spacing: 3px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-links a:hover {
+    background: rgba(0,0,0,0.2);
+    color: var(--yellow);
+  }
+
+  .nav-cta {
+    background: var(--yellow) !important;
+    color: var(--text) !important;
+    border-radius: 4px !important;
+    box-shadow: 0 3px 0 var(--yellow-shadow);
+    transition: transform 0.1s, box-shadow 0.1s !important;
+  }
+
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 var(--yellow-shadow) !important;
+    background: var(--yellow) !important;
+    color: var(--text) !important;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 68px;
+  }
+
+  .hero-stud-bg {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 3px, transparent 3px);
+    background-size: 32px 32px;
+  }
+
+  .hero-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 80px 2rem;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero h1 {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: clamp(3.5rem, 7vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: 3px;
+    color: white;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero h1 .yellow { color: var(--yellow); text-shadow: 0 3px 0 var(--yellow-dark); }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.8);
+    max-width: 480px;
+    margin: 1.5rem 0 2.5rem;
+    line-height: 1.7;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--yellow);
+    color: var(--text);
+    border: none;
+    padding: 14px 32px;
+    font-family: 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 6px;
+    box-shadow: 0 5px 0 var(--yellow-shadow);
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 var(--yellow-shadow);
+  }
+
+  .btn-primary:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 var(--yellow-shadow);
+  }
+
+  .btn-white {
+    background: white;
+    color: var(--red);
+    border: none;
+    padding: 14px 32px;
+    font-family: 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 6px;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .btn-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 rgba(0,0,0,0.2);
+  }
+
+  /* HERO BRICK VISUAL */
+  .hero-visual {
+    animation: fadeUp 0.6s 0.3s ease both;
+    display: flex;
+    justify-content: center;
+  }
+
+  .big-brick-wrap {
+    position: relative;
+  }
+
+  .big-brick {
+    width: 280px;
+    height: 180px;
+    background: var(--yellow);
+    border-radius: 8px;
+    box-shadow: 0 12px 0 var(--yellow-dark), 0 20px 40px rgba(0,0,0,0.3);
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 0 20px;
+    align-items: flex-start;
+    padding-top: 16px;
+    gap: 12px;
+  }
+
+  .stud-3d {
+    width: 48px;
+    height: 48px;
+    background: var(--yellow);
+    border-radius: 50%;
+    border: 3px solid rgba(0,0,0,0.15);
+    box-shadow: 0 -6px 0 var(--yellow-dark), inset 0 2px 4px rgba(255,255,255,0.4);
+    margin-top: -24px;
+  }
+
+  .mini-brick {
+    position: absolute;
+    border-radius: 4px;
+  }
+
+  .mb1 { width: 80px; height: 50px; background: var(--red); bottom: -30px; left: -40px; box-shadow: 0 6px 0 var(--red-dark); }
+  .mb2 { width: 60px; height: 40px; background: var(--blue); bottom: -50px; right: -20px; box-shadow: 0 5px 0 #004880; }
+  .mb3 { width: 50px; height: 35px; background: var(--green); top: 20px; right: -40px; box-shadow: 0 5px 0 #007040; }
+
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .stat-num {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 2.2rem;
+    color: var(--yellow);
+    line-height: 1;
+    text-shadow: 0 2px 0 var(--yellow-dark);
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* YELLOW STRIP */
+  .yellow-strip {
+    background: var(--yellow);
+    padding: 14px 0;
+    border-top: 4px solid var(--yellow-dark);
+    border-bottom: 4px solid var(--yellow-dark);
+    overflow: hidden;
+  }
+
+  .strip-scroll {
+    display: flex;
+    gap: 2.5rem;
+    animation: scroll 22s linear infinite;
+    white-space: nowrap;
+    align-items: center;
+  }
+
+  .strip-scroll span {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    color: var(--text);
+  }
+
+  .strip-scroll .sep {
+    color: var(--red);
+    font-size: 1.4rem;
+  }
+
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTIONS */
+  section { padding: 90px 0; }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: var(--red);
+    opacity: 0.2;
+    max-width: 60px;
+  }
+
+  .section-title {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: clamp(2.2rem, 4vw, 4rem);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+
+  .section-desc {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 500px;
+    line-height: 1.7;
+  }
+
+  /* HISTORIA */
+  #historia { background: white; }
+
+  .historia-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 3.5rem;
+    align-items: start;
+  }
+
+  .timeline { position: relative; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--red), var(--yellow), var(--blue), transparent);
+    border-radius: 2px;
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2.2rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .timeline-item:hover { transform: translateX(6px); }
+
+  .timeline-dot {
+    width: 42px;
+    height: 42px;
+    background: var(--red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 0 var(--red-dark);
+    transition: background 0.2s;
+  }
+
+  .timeline-dot.yellow-dot { background: var(--yellow); box-shadow: 0 4px 0 var(--yellow-dark); }
+  .timeline-dot.blue-dot { background: var(--blue); box-shadow: 0 4px 0 #004880; }
+
+  .timeline-dot-inner {
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .timeline-year {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 1.4rem;
+    color: var(--red);
+    letter-spacing: 2px;
+  }
+
+  .timeline-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+
+  .timeline-text {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  /* FEATURED SET CARD */
+  .historia-featured {
+    background: var(--off-white);
+    border: 3px solid var(--mid-gray);
+    border-radius: 8px;
+    overflow: hidden;
+    position: sticky;
+    top: 88px;
+    box-shadow: 0 8px 0 var(--mid-gray);
+  }
+
+  .featured-img {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .featured-img .stud-bg {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(0,0,0,0.08) 3px, transparent 3px);
+    background-size: 24px 24px;
+  }
+
+  .lego-set-visual {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .brick {
+    height: 28px;
+    border-radius: 3px;
+    position: relative;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+  }
+
+  .brick::after {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 10px;
+    border-radius: 50% 50% 0 0;
+    background: inherit;
+    filter: brightness(1.1);
+    box-shadow: 0 -3px 0 rgba(0,0,0,0.2);
+  }
+
+  .featured-body { padding: 1.5rem; }
+
+  .featured-tag {
+    background: var(--red);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 0.75rem;
+  }
+
+  .featured-title {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .featured-text {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  .featured-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 2px solid var(--mid-gray);
+  }
+
+  .featured-link {
+    color: var(--red);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.2s;
+  }
+
+  .featured-link:hover { gap: 12px; }
+
+  /* NOTICIAS */
+  #noticias { background: var(--off-white); }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .news-main {
+    background: white;
+    border: 3px solid var(--mid-gray);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 6px 0 var(--mid-gray);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .news-main:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 0 var(--mid-gray);
+  }
+
+  .news-img {
+    width: 100%;
+    height: 260px;
+    background: linear-gradient(135deg, var(--red), #FF4444);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .news-img .stud-over {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.1) 3px, transparent 3px);
+    background-size: 28px 28px;
+  }
+
+  .news-img-label {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 6rem;
+    color: rgba(255,255,255,0.15);
+    position: relative;
+    z-index: 1;
+    letter-spacing: 4px;
+  }
+
+  .news-body { padding: 1.5rem; }
+
+  .news-cat {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.5rem;
+  }
+
+  .news-title {
+    font-family: 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+
+  .news-excerpt {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .news-meta { font-size: 0.75rem; color: var(--muted); }
+
+  .news-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .news-small {
+    background: white;
+    border: 3px solid var(--mid-gray);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--mid-gray);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .news-small:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--mid-gray);
+  }
+
+  .news-small-num {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 2rem;
+    color: rgba(227,0,11,0.2);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .news-small-title {
+    font-weight: 700;
+    font-size: 0.88rem;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+
+  .news-small-date { font-size: 0.73rem; color: var(--muted); }
+
+  /* SETS */
+  #proximos { background: white; }
+
+  /* BUSCADOR */
+  .search-bar-wrap {
+    margin-top: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .search-bar {
+    display: flex;
+    gap: 0;
+    border: 3px solid var(--mid-gray);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 0 var(--mid-gray);
+    background: white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .search-bar:focus-within {
+    border-color: var(--red);
+    box-shadow: 0 6px 0 var(--red-dark);
+  }
+
+  .search-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1.1rem;
+    background: white;
+    color: var(--muted);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    background: white;
+    padding: 14px 0;
+  }
+
+  .search-input::placeholder {
+    color: var(--mid-gray);
+    font-weight: 500;
+  }
+
+  .search-divider {
+    width: 2px;
+    background: var(--light-gray);
+    margin: 10px 0;
+    flex-shrink: 0;
+  }
+
+  .search-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-family: 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+
+  .search-btn:hover { background: var(--red-dark); }
+
+  .search-filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 0.25rem;
+  }
+
+  .filter-chip {
+    background: var(--off-white);
+    border: 2px solid var(--mid-gray);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 2px 0 var(--mid-gray);
+  }
+
+  .filter-chip:hover, .filter-chip.active {
+    background: var(--red);
+    border-color: var(--red-dark);
+    color: white;
+    box-shadow: 0 2px 0 var(--red-dark);
+  }
+
+  .search-results-info {
+    margin-top: 1.25rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 600;
+    min-height: 1.2em;
+  }
+
+  .search-results-info span { color: var(--red); }
+
+  .set-card.hidden { display: none; }
+
+  .no-results {
+    display: none;
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background: var(--off-white);
+    border: 3px dashed var(--mid-gray);
+    border-radius: 8px;
+  }
+
+  .no-results.visible { display: block; }
+
+  .no-results-icon { font-size: 3rem; margin-bottom: 0.75rem; }
+
+  .no-results h3 {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .no-results p { color: var(--muted); font-size: 0.88rem; }
+
+  .sets-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .set-card {
+    background: var(--off-white);
+    border: 3px solid var(--mid-gray);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 0 var(--mid-gray);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+
+  .set-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 0 var(--mid-gray);
+  }
+
+  .set-visual {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .set-visual.theme-city { background: linear-gradient(135deg, #006CB7, #00A0E0); }
+  .set-visual.theme-space { background: linear-gradient(135deg, #006CB7, #0088E0); }
+  .set-visual.theme-castle { background: linear-gradient(135deg, var(--red), #FF4444); }
+
+  .set-visual .stud-over {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.1) 3px, transparent 3px);
+    background-size: 22px 22px;
+  }
+
+  .set-icon {
+    font-size: 3.5rem;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  }
+
+  .set-badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--yellow);
+    color: var(--text);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    box-shadow: 0 2px 0 var(--yellow-dark);
+  }
+
+  .set-body { padding: 1.25rem; }
+  .set-num { font-size: 0.68rem; color: var(--muted); letter-spacing: 1px; margin-bottom: 4px; }
+
+  .set-name {
+    font-family: 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .set-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+
+  .set-pieces { color: var(--muted); }
+  .set-price { font-weight: 800; color: var(--red); font-size: 1.1rem; }
+  .set-release { font-size: 0.73rem; color: var(--blue); margin-top: 0.5rem; font-weight: 700; }
+
+  .dest-btn {
+    background: white;
+    border: 3px solid var(--mid-gray);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 3px 0 var(--mid-gray);
+    transition: all 0.15s;
+    color: var(--muted);
+  }
+  .dest-btn:hover, .dest-btn.active {
+    background: var(--red);
+    border-color: var(--red-dark);
+    color: white;
+    box-shadow: 0 3px 0 var(--red-dark);
+  }
+
+  /* SERVICIOS */
+  #servicios { background: var(--red); }
+
+  .services-header { margin-bottom: 3rem; }
+  .services-header .section-label { color: rgba(255,255,255,0.7); }
+  .services-header .section-label::after { background: white; }
+  .services-header .section-title { color: white; }
+  .services-header .section-desc { color: rgba(255,255,255,0.7); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  .service-card {
+    background: rgba(255,255,255,0.12);
+    border: 3px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+    position: relative;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+  }
+
+  .service-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255,255,255,0.2);
+    box-shadow: 0 10px 0 rgba(0,0,0,0.2);
+  }
+
+  .service-soon {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--yellow);
+    color: var(--text);
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 0 var(--yellow-dark);
+  }
+
+  .service-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+
+  .service-title {
+    font-family: 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: white;
+  }
+
+  .service-desc { color: rgba(255,255,255,0.7); font-size: 0.83rem; line-height: 1.6; }
+
+  /* COMUNIDAD */
+  #comunidad { background: var(--off-white); }
+
+  .community-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2.5rem;
+    margin-top: 3rem;
+  }
+
+  .forum-list {
+    border: 3px solid var(--mid-gray);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 0 var(--mid-gray);
+  }
+
+  .forum-header-row {
+    background: var(--red);
+    padding: 1rem 1.5rem;
+    font-family: 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: white;
+  }
+
+  .forum-item {
+    background: white;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    cursor: pointer;
+    border-bottom: 2px solid var(--light-gray);
+    transition: background 0.2s;
+  }
+
+  .forum-item:last-child { border-bottom: none; }
+  .forum-item:hover { background: var(--off-white); }
+
+  .forum-icon-wrap {
+    width: 48px;
+    height: 48px;
+    background: var(--off-white);
+    border: 2px solid var(--mid-gray);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    box-shadow: 0 3px 0 var(--mid-gray);
+  }
+
+  .forum-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+    color: var(--text);
+  }
+
+  .forum-desc { color: var(--muted); font-size: 0.8rem; }
+
+  .forum-stats { margin-left: auto; text-align: right; flex-shrink: 0; }
+
+  .forum-count {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 1.5rem;
+    color: var(--red);
+    line-height: 1;
+  }
+
+  .forum-label { font-size: 0.62rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  .community-side { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .side-widget {
+    background: white;
+    border: 3px solid var(--mid-gray);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 0 var(--mid-gray);
+  }
+
+  .widget-header {
+    background: var(--yellow);
+    padding: 0.75rem 1.25rem;
+    font-family: 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text);
+    border-bottom: 3px solid var(--yellow-dark);
+  }
+
+  .widget-body { padding: 1rem 1.25rem; }
+
+  .leaderboard-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--light-gray);
+  }
+
+  .leaderboard-item:last-child { border-bottom: none; }
+
+  .lb-rank {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 1.3rem;
+    color: var(--muted);
+    width: 20px;
+    text-align: center;
+  }
+
+  .lb-rank.gold { color: var(--yellow-dark); }
+  .lb-rank.silver { color: #888; }
+  .lb-rank.bronze { color: #CD7F32; }
+
+  .lb-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    border: 2px solid var(--mid-gray);
+  }
+
+  .lb-name { font-size: 0.85rem; font-weight: 700; flex: 1; color: var(--text); }
+  .lb-score { font-size: 0.8rem; color: var(--red); font-weight: 800; }
+
+  .join-cta {
+    background: var(--blue);
+    border: 3px solid #004880;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 6px 0 #004880;
+  }
+
+  .join-cta h3 {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    color: white;
+  }
+
+  .join-cta p {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--text);
+    border-top: 6px solid var(--red);
+    padding: 60px 0 30px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-brand p {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    margin: 1rem 0;
+  }
+
+  .footer-disclaimer {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.3);
+    line-height: 1.6;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+
+  .logo-name-footer {
+    font-family: Impact, 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+    font-size: 1.8rem;
+    color: white;
+    letter-spacing: 3px;
+  }
+
+  .logo-name-footer span { color: var(--yellow); }
+
+  .footer-col h4 {
+    font-family: 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 1rem;
+  }
+
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 0.5rem; }
+
+  .footer-col a {
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: color 0.2s;
+  }
+
+  .footer-col a:hover { color: var(--yellow); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy { color: rgba(255,255,255,0.3); font-size: 0.78rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--off-white); }
+  ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 3px; }
+
+  /* HAMBURGER */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+    background: none;
+    border: none;
+  }
+  .hamburger span {
+    display: block;
+    width: 26px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: var(--red);
+    border-top: 2px solid var(--red-dark);
+    z-index: 99;
+    padding: 1rem 0;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 14px 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: background 0.2s;
+  }
+  .mobile-menu a:last-child {
+    margin: 1rem 2rem 0;
+    background: var(--yellow);
+    color: var(--text);
+    text-align: center;
+    border-radius: 6px;
+    border-bottom: none;
+    box-shadow: 0 4px 0 var(--yellow-shadow);
+  }
+  .mobile-menu a:hover { background: rgba(0,0,0,0.15); }
+  .mobile-menu a:last-child:hover { background: var(--yellow); }
+
+  /* FOTO BANNER — galería horizontal entre secciones */
+  .photo-strip {
+    overflow: hidden;
+    position: relative;
+    background: #111;
+    line-height: 0;
+  }
+  .photo-strip-inner {
+    display: flex;
+    align-items: center;
+    animation: photoScroll 35s linear infinite;
+    width: max-content;
+  }
+  .photo-strip-inner img {
+    object-fit: cover;
+    flex-shrink: 0;
+    filter: brightness(0.92);
+    transition: filter 0.3s;
+    display: block;
+  }
+  .photo-strip-inner img:hover { filter: brightness(1.05); }
+  @keyframes photoScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* FOTO HIGHLIGHT — imagen grande dentro de sección */
+  .section-photo {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 3px solid var(--mid-gray);
+    box-shadow: 0 8px 0 var(--mid-gray);
+    margin: 2.5rem 0;
+  }
+  .section-photo img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+  }
+  .section-photo-caption {
+    background: white;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    border-top: 2px solid var(--mid-gray);
+  }
+  .section-photo-caption strong { color: var(--text); }
+
+  /* FOTO GRID — 3 fotos lado a lado */
+  .photo-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 2.5rem 0;
+  }
+  .photo-grid-3 .photo-item {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 3px solid var(--mid-gray);
+    box-shadow: 0 5px 0 var(--mid-gray);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .photo-grid-3 .photo-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 9px 0 var(--mid-gray);
+  }
+  .photo-grid-3 img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-item-caption {
+    background: white;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+    border-top: 2px solid var(--mid-gray);
+  }
+
+  /* ═══════════════════════════════════
+     RESPONSIVE — TABLET (≤ 900px)
+  ═══════════════════════════════════ */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+
+    .hero-inner {
+      grid-template-columns: 1fr;
+      padding: 60px 1.5rem 50px;
+      gap: 2.5rem;
+    }
+    .hero-visual { justify-content: flex-start; }
+    .big-brick { width: 220px; height: 140px; }
+    .stud-3d { width: 36px; height: 36px; margin-top: -18px; }
+
+    .historia-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .historia-featured { position: static; }
+
+    .news-grid { grid-template-columns: 1fr; }
+
+    .sets-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .community-layout { grid-template-columns: 1fr; }
+
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+    .photo-grid-3 { grid-template-columns: 1fr 1fr; }
+    .photo-strip { height: 160px; }
+    section { padding: 60px 0; }
+    .container { padding: 0 1.25rem; }
+  }
+
+  /* ═══════════════════════════════════
+     RESPONSIVE — MOBILE (≤ 560px)
+  ═══════════════════════════════════ */
+  @media (max-width: 560px) {
+    .hero h1 { font-size: 3.2rem; }
+    .hero-stats { gap: 1.25rem; flex-wrap: wrap; }
+    .stat-num { font-size: 1.8rem; }
+
+    .btn-primary, .btn-white {
+      padding: 12px 22px;
+      font-size: 0.9rem;
+    }
+
+    .sets-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .photo-grid-3 { grid-template-columns: 1fr; }
+
+    .footer-grid { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+
+    .search-bar { flex-wrap: wrap; }
+    .search-btn { width: 100%; text-align: center; padding: 12px; }
+    .search-divider { display: none; }
+
+    section { padding: 50px 0; }
+    .container { padding: 0 1rem; }
+
+    .photo-strip { height: 130px; }
+
+    .historia-grid { gap: 2rem; }
+    .timeline-item { gap: 1rem; }
+
+    .news-grid { grid-template-columns: 1fr; }
+    .community-layout { grid-template-columns: 1fr; }
+
+    .section-title { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-oval">
+        <div class="logo-oval-inner">
+          <div class="logo-oval-text">BRICK<br>VAULT</div>
+        </div>
+      </div>
+      <span class="logo-name">BRICK<span style="color:var(--yellow)">VAULT</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#historia">Historia</a></li>
+      <li><a href="#noticias">Noticias</a></li>
+      <li><a href="#proximos">Próximos Sets</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#comunidad">Comunidad</a></li>
+      <li><a href="#comunidad" class="nav-cta">Unirse</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#historia" onclick="closeMobileMenu()">📚 Historia</a>
+  <a href="#noticias" onclick="closeMobileMenu()">📰 Noticias</a>
+  <a href="#proximos" onclick="closeMobileMenu()">🗓️ Sets</a>
+  <a href="#servicios" onclick="closeMobileMenu()">⚙️ Servicios</a>
+  <a href="#comunidad" onclick="closeMobileMenu()">🤝 Comunidad</a>
+  <a href="#comunidad" onclick="closeMobileMenu()">Unirse gratis →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-stud-bg"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">🧱 La comunidad LEGO en español</div>
+      <h1>CONSTRUÍ<br>TU <span class="yellow">PASIÓN</span><br>PIEZA A<br>PIEZA</h1>
+      <p class="hero-sub">Historia, noticias y comunidad para los fanáticos más apasionados del mundo LEGO. Desde 1949 hasta hoy.</p>
+      <div class="hero-actions">
+        <a href="#historia" class="btn-primary">Explorar Historia</a>
+        <a href="#comunidad" class="btn-white">Unirse al Foro →</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">18.000+</div>
+          <div class="stat-label">Sets catalogados</div>
+        </div>
+        <div>
+          <div class="stat-num">75+</div>
+          <div class="stat-label">Años de historia</div>
+        </div>
+        <div>
+          <div class="stat-num">450+</div>
+          <div class="stat-label">Temas distintos</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="big-brick-wrap">
+        <div class="big-brick">
+          <div class="stud-3d"></div>
+          <div class="stud-3d"></div>
+          <div class="stud-3d"></div>
+          <div class="stud-3d"></div>
+        </div>
+        <div class="mini-brick mb1"></div>
+        <div class="mini-brick mb2"></div>
+        <div class="mini-brick mb3"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- YELLOW STRIP -->
+<div class="yellow-strip">
+  <div class="strip-scroll">
+    <span>BRICKVAULT</span><span class="sep">◆</span>
+    <span>STUDHUB</span><span class="sep">◆</span>
+    <span>BRICKFANA</span><span class="sep">◆</span>
+    <span>EL LADRILLO</span><span class="sep">◆</span>
+    <span>MASTERBRICK</span><span class="sep">◆</span>
+    <span>LEGO CLAVE</span><span class="sep">◆</span>
+    <span>BRICKVAULT</span><span class="sep">◆</span>
+    <span>STUDHUB</span><span class="sep">◆</span>
+    <span>BRICKFANA</span><span class="sep">◆</span>
+    <span>EL LADRILLO</span><span class="sep">◆</span>
+    <span>MASTERBRICK</span><span class="sep">◆</span>
+    <span>LEGO CLAVE</span><span class="sep">◆</span>
+  </div>
+</div>
+
+<!-- PHOTO STRIP — sets icónicos desfilando -->
+<div class="photo-strip">
+  <div class="photo-strip-inner">
+    <img src="https://cdn.rebrickable.com/media/sets/75192-1.jpg" alt="Millennium Falcon" loading="lazy" style="height:220px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/42083-1.jpg" alt="Bugatti Chiron" loading="lazy" style="height:220px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/10276-1.jpg" alt="Colosseum" loading="lazy" style="height:220px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/10307-1.jpg" alt="Eiffel Tower" loading="lazy" style="height:220px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/21037-1.jpg" alt="LEGO House" loading="lazy" style="height:220px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/10497-1.jpg" alt="Galaxy Explorer" loading="lazy" style="height:220px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/75192-1.jpg" alt="Millennium Falcon" loading="lazy" style="height:220px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/42083-1.jpg" alt="Bugatti Chiron" loading="lazy" style="height:220px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/10276-1.jpg" alt="Colosseum" loading="lazy" style="height:220px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/10307-1.jpg" alt="Eiffel Tower" loading="lazy" style="height:220px;width:auto;flex-shrink:0;">
+  </div>
+</div>
+
+<!-- HISTORIA -->
+<section id="historia">
+  <div class="container">
+    <div class="section-label">📚 Historia LEGO</div>
+    <h2 class="section-title">75 AÑOS DE<br>CREATIVIDAD</h2>
+    <p class="section-desc">Desde un taller en Dinamarca hasta convertirse en la empresa de juguetes más grande del mundo.</p>
+
+    <div class="historia-grid">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+          <div>
+            <div class="timeline-year">1932</div>
+            <div class="timeline-title">El comienzo — Ole Kirk Christiansen</div>
+            <div class="timeline-text">Ole Kirk funda una pequeña carpintería en Billund, Dinamarca. Empieza fabricando juguetes de madera de alta calidad para niños.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot yellow-dot"><div class="timeline-dot-inner"></div></div>
+          <div>
+            <div class="timeline-year">1949</div>
+            <div class="timeline-title">Nace el ladrillo plástico</div>
+            <div class="timeline-text">LEGO introduce el "Ladrillo Automático de Acoplamiento". Una patente que cambiaría la historia del juguete para siempre.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot blue-dot"><div class="timeline-dot-inner"></div></div>
+          <div>
+            <div class="timeline-year">1958</div>
+            <div class="timeline-title">El sistema LEGO — La patente definitiva</div>
+            <div class="timeline-text">Se patenta el sistema de tubos y espigas. Cualquier ladrillo fabricado desde este año encaja perfectamente con los de hoy.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+          <div>
+            <div class="timeline-year">1968</div>
+            <div class="timeline-title">LEGOLAND Billund — El primer parque</div>
+            <div class="timeline-text">Abre el primer LEGOLAND en Billund. 625.000 visitantes en el primer año. La marca trasciende el juguete.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot yellow-dot"><div class="timeline-dot-inner"></div></div>
+          <div>
+            <div class="timeline-year">1978</div>
+            <div class="timeline-title">Nace la Minifigura</div>
+            <div class="timeline-text">La icónica minifigura LEGO llega con Castle y Space. Se convierte en el "personaje" más producido de la historia.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot blue-dot"><div class="timeline-dot-inner"></div></div>
+          <div>
+            <div class="timeline-year">1997</div>
+            <div class="timeline-title">LEGO Star Wars — La era de las licencias</div>
+            <div class="timeline-text">La colaboración con Lucasfilm abre una nueva era: licencias premium que llevan el juguete a un público adulto coleccionista.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"><div class="timeline-dot-inner"></div></div>
+          <div>
+            <div class="timeline-year">HOY</div>
+            <div class="timeline-title">LEGO Icons & más de 18.000 sets</div>
+            <div class="timeline-text">LEGO es la marca de juguetes más valiosa del mundo, con líneas como Icons, Technic, Ideas y decenas de licencias activas.</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="historia-featured">
+          <div class="featured-img" style="padding:0;">
+            <img src="https://cdn.rebrickable.com/media/sets/926-1.jpg" alt="Space Command Center 1979"
+              style="width:100%;height:100%;object-fit:contain;background:#FFD700;padding:12px;"
+              onerror="this.style.display='none'" loading="lazy">
+          </div>
+          <div class="featured-body">
+            <div class="featured-tag">Set destacado</div>
+            <div class="featured-title">LEGO 926 — Space Command Center (1979)</div>
+            <div class="featured-text">Uno de los sets más icónicos de la era clásica Space. Con su base lunar y vehículo explorador, definió una generación entera de fanáticos. Hoy vale hasta $2.000 en buen estado.</div>
+            <div class="featured-meta">
+              <div style="font-size:0.75rem; color:var(--muted);">Piezas: 482 · Año: 1979</div>
+              <a href="https://www.lego.com" target="_blank" class="featured-link">Ver en LEGO.com →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOTOS — Sets icónicos de cada era -->
+    <div class="photo-grid-3">
+      <div class="photo-item">
+        <img src="https://cdn.rebrickable.com/media/sets/926-1.jpg" alt="Space Command Center 1979" onerror="this.src='https://cdn.rebrickable.com/media/sets/497-1.jpg'" loading="lazy">
+        <div class="photo-item-caption">Space Command Center · 1979</div>
+      </div>
+      <div class="photo-item">
+        <img src="https://cdn.rebrickable.com/media/sets/375-1.jpg" alt="Yellow Castle 1978" onerror="this.src='https://cdn.rebrickable.com/media/sets/6075-1.jpg'" loading="lazy">
+        <div class="photo-item-caption">Yellow Castle · 1978</div>
+      </div>
+      <div class="photo-item">
+        <img src="https://cdn.rebrickable.com/media/sets/6399-1.jpg" alt="Airport Shuttle 1990" onerror="this.src='https://cdn.rebrickable.com/media/sets/6380-1.jpg'" loading="lazy">
+        <div class="photo-item-caption">Airport Shuttle · 1990</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section id="noticias">
+  <div class="container">
+    <div class="section-label">📰 Noticias & Novedades</div>
+    <h2 class="section-title">LO ÚLTIMO DEL<br>UNIVERSO LEGO</h2>
+    <div class="news-grid">
+      <div class="news-main">
+        <div class="news-img" style="padding:0;">
+          <img src="https://cdn.rebrickable.com/media/sets/10497-1.jpg" alt="LEGO Space Classic 2022"
+            style="width:100%;height:100%;object-fit:cover;display:block;"
+            onerror="this.style.display='none'; this.parentElement.querySelector('.stud-over').style.display='block'; this.parentElement.querySelector('.news-img-label').style.display='block';" loading="lazy">
+          <div class="stud-over" style="display:none;"></div>
+          <div class="news-img-label" style="display:none;">2025</div>
+        </div>
+        <div class="news-body">
+          <div class="news-cat">🔥 Noticia principal</div>
+          <div class="news-title">LEGO confirma el regreso de la línea Space Classic para el segundo semestre de 2025</div>
+          <div class="news-excerpt">La legendaria línea Space de los años 80 vuelve con nuevos diseños que rendirán homenaje a los sets originales. Los fans de la primera hora están eufóricos.</div>
+          <div class="news-meta">Junio 2025 · 3 min de lectura</div>
+        </div>
+      </div>
+      <div class="news-sidebar">
+        <div class="news-small">
+          <div class="news-small-num">01</div>
+          <div>
+            <div class="news-small-title">Nuevo set LEGO Icons: Castillo Medieval con 4.514 piezas</div>
+            <div class="news-small-date">Mayo 2025</div>
+          </div>
+        </div>
+        <div class="news-small">
+          <div class="news-small-num">02</div>
+          <div>
+            <div class="news-small-title">LEGO Technic presenta el Ferrari SF-24 oficial de F1</div>
+            <div class="news-small-date">Mayo 2025</div>
+          </div>
+        </div>
+        <div class="news-small">
+          <div class="news-small-num">03</div>
+          <div>
+            <div class="news-small-title">Colaboración Nintendo: el set Donkey Kong bate records de preventa</div>
+            <div class="news-small-date">Abril 2025</div>
+          </div>
+        </div>
+        <div class="news-small">
+          <div class="news-small-num">04</div>
+          <div>
+            <div class="news-small-title">LEGO Ideas selecciona 3 proyectos de fans para producción masiva</div>
+            <div class="news-small-date">Abril 2025</div>
+          </div>
+        </div>
+        <div class="news-small">
+          <div class="news-small-num">05</div>
+          <div>
+            <div class="news-small-title">Reseña: LEGO Star Wars Millennium Falcon 75375 — ¿Vale la pena?</div>
+            <div class="news-small-date">Marzo 2025</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOTO STRIP 2 — Technic y arquitectura -->
+<div class="photo-strip" style="height:180px;">
+  <div class="photo-strip-inner">
+    <img src="https://cdn.rebrickable.com/media/sets/42115-1.jpg" alt="Lamborghini Sian" loading="lazy" style="height:180px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/42056-1.jpg" alt="Porsche 911" loading="lazy" style="height:180px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/10030-1.jpg" alt="Star Destroyer" loading="lazy" style="height:180px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/375-1.jpg" alt="Yellow Castle" loading="lazy" style="height:180px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/42115-1.jpg" alt="Lamborghini Sian" loading="lazy" style="height:180px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/42056-1.jpg" alt="Porsche 911" loading="lazy" style="height:180px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/10030-1.jpg" alt="Star Destroyer" loading="lazy" style="height:180px;width:auto;flex-shrink:0;">
+    <img src="https://cdn.rebrickable.com/media/sets/375-1.jpg" alt="Yellow Castle" loading="lazy" style="height:180px;width:auto;flex-shrink:0;">
+  </div>
+</div>
+
+<!-- BUSCADOR DE SETS -->
+<section id="proximos">
+  <div class="container">
+    <div class="section-label">🔍 Base de datos completa</div>
+    <h2 class="section-title">BUSCADOR DE<br>SETS LEGO</h2>
+    <p class="section-desc">Buscá cualquier set por nombre o número. Te llevamos directo a los resultados.</p>
+
+    <!-- BUSCADOR -->
+    <div class="search-bar-wrap" style="margin-top:2rem;">
+      <div class="search-bar">
+        <div class="search-icon">🔍</div>
+        <input class="search-input" id="setSearch" type="text"
+          placeholder="Ej: 75192, Millennium Falcon, Technic Bugatti..."
+          autocomplete="off">
+        <div class="search-divider"></div>
+        <button class="search-btn" id="searchBtn">Buscar</button>
+      </div>
+
+      <!-- DESTINOS DE BÚSQUEDA -->
+      <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap;">
+        <span style="font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);align-self:center;">Buscar en:</span>
+        <button class="dest-btn active" data-dest="brickset" onclick="setDest(this,'brickset')">
+          🗃️ Brickset
+        </button>
+        <button class="dest-btn" data-dest="lego" onclick="setDest(this,'lego')">
+          🟥 LEGO.com
+        </button>
+        <button class="dest-btn" data-dest="google" onclick="setDest(this,'google')">
+          🔎 Google
+        </button>
+        <button class="dest-btn" data-dest="youtube" onclick="setDest(this,'youtube')">
+          ▶️ YouTube Reviews
+        </button>
+      </div>
+
+      <div id="searchInfo" style="margin-top:1rem;font-size:0.82rem;color:var(--muted);font-weight:600;min-height:1.2em;"></div>
+    </div>
+
+    <!-- SETS DESTACADOS (estáticos, siempre visibles) -->
+    <div style="margin-top:2.5rem;">
+      <div style="font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">
+        🏆 Sets icónicos — clickeá para buscar
+      </div>
+      <div id="setsGrid" class="sets-grid"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="container">
+    <div class="services-header">
+      <div class="section-label">⚙️ Servicios</div>
+      <h2 class="section-title">TODO LO QUE<br>NECESITÁS</h2>
+      <p class="section-desc">Próximamente habilitaremos servicios de compra, venta e intercambio para la comunidad.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-icon">🛒</span>
+        <div class="service-title">Compra de Sets</div>
+        <div class="service-desc">Los mejores precios en sets nuevos de proveedores verificados por la comunidad.</div>
+        <div class="service-soon">Próximamente</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">🔄</span>
+        <div class="service-title">Trades</div>
+        <div class="service-desc">Intercambiá sets con otros fanáticos de forma segura. Tenés de más, te falta uno.</div>
+        <div class="service-soon">Próximamente</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">🧱</span>
+        <div class="service-title">Piezas Sueltas</div>
+        <div class="service-desc">Conseguí esa pieza específica que te falta para completar tu MOC o set incompleto.</div>
+        <div class="service-soon">Próximamente</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">📦</span>
+        <div class="service-title">Sets Usados</div>
+        <div class="service-desc">Marketplace de sets usados verificados por la comunidad, con fotos y valoraciones reales.</div>
+        <div class="service-soon">Próximamente</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMUNIDAD -->
+<section id="comunidad">
+  <div class="container">
+    <div class="section-label">🤝 Comunidad</div>
+    <h2 class="section-title">EL FORO DE<br>LOS FANÁTICOS</h2>
+    <div class="community-layout">
+      <div class="forum-list">
+        <div class="forum-header-row">Categorías del foro</div>
+        <div class="forum-item">
+          <div class="forum-icon-wrap">🏆</div>
+          <div>
+            <div class="forum-name">MOC — Mis Propias Creaciones</div>
+            <div class="forum-desc">Mostrá tus builds originales y recibí feedback de la comunidad</div>
+          </div>
+          <div class="forum-stats">
+            <div class="forum-count">824</div>
+            <div class="forum-label">Temas</div>
+          </div>
+        </div>
+        <div class="forum-item">
+          <div class="forum-icon-wrap">📚</div>
+          <div>
+            <div class="forum-name">Historia & Coleccionismo</div>
+            <div class="forum-desc">Sets vintage, rarezas y toda la historia de LEGO</div>
+          </div>
+          <div class="forum-stats">
+            <div class="forum-count">412</div>
+            <div class="forum-label">Temas</div>
+          </div>
+        </div>
+        <div class="forum-item">
+          <div class="forum-icon-wrap">🔧</div>
+          <div>
+            <div class="forum-name">Technic & GBC</div>
+            <div class="forum-desc">Mecánica, engranajes, circuitos y automatización LEGO</div>
+          </div>
+          <div class="forum-stats">
+            <div class="forum-count">287</div>
+            <div class="forum-label">Temas</div>
+          </div>
+        </div>
+        <div class="forum-item">
+          <div class="forum-icon-wrap">⭐</div>
+          <div>
+            <div class="forum-name">Reviews & Opiniones</div>
+            <div class="forum-desc">¿Vale la pena ese set? Leé y escribí reseñas honestas</div>
+          </div>
+          <div class="forum-stats">
+            <div class="forum-count">631</div>
+            <div class="forum-label">Temas</div>
+          </div>
+        </div>
+        <div class="forum-item">
+          <div class="forum-icon-wrap">🔵</div>
+          <div>
+            <div class="forum-name">Noticias & Rumores</div>
+            <div class="forum-desc">Filtraciones, anuncios y especulaciones sobre próximos sets</div>
+          </div>
+          <div class="forum-stats">
+            <div class="forum-count">198</div>
+            <div class="forum-label">Temas</div>
+          </div>
+        </div>
+        <div class="forum-item">
+          <div class="forum-icon-wrap">🤝</div>
+          <div>
+            <div class="forum-name">Compra, Venta & Trades</div>
+            <div class="forum-desc">Coordiná intercambios de forma directa con la comunidad</div>
+          </div>
+          <div class="forum-stats">
+            <div class="forum-count">155</div>
+            <div class="forum-label">Temas</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="community-side">
+        <div class="side-widget">
+          <div class="widget-header">🏅 Top Constructores del Mes</div>
+          <div class="widget-body">
+            <div class="leaderboard-item">
+              <div class="lb-rank gold">1</div>
+              <div class="lb-avatar" style="background:#FFF3CC; color:#B89000;">MK</div>
+              <div class="lb-name">MasterKlaus_AR</div>
+              <div class="lb-score">4.820 pts</div>
+            </div>
+            <div class="leaderboard-item">
+              <div class="lb-rank silver">2</div>
+              <div class="lb-avatar" style="background:#F0F0F0; color:#888;">BL</div>
+              <div class="lb-name">BrickLorena</div>
+              <div class="lb-score">3.945 pts</div>
+            </div>
+            <div class="leaderboard-item">
+              <div class="lb-rank bronze">3</div>
+              <div class="lb-avatar" style="background:#F5EAD0; color:#CD7F32;">SP</div>
+              <div class="lb-name">SpaceFanatic88</div>
+              <div class="lb-score">3.210 pts</div>
+            </div>
+            <div class="leaderboard-item">
+              <div class="lb-rank">4</div>
+              <div class="lb-avatar" style="background:#E0F5E0; color:#00A650;">NF</div>
+              <div class="lb-name">NanoBricks_Felix</div>
+              <div class="lb-score">2.870 pts</div>
+            </div>
+            <div class="leaderboard-item">
+              <div class="lb-rank">5</div>
+              <div class="lb-avatar" style="background:#E0EEF5; color:#006CB7;">TC</div>
+              <div class="lb-name">TechnicCarla</div>
+              <div class="lb-score">2.415 pts</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="join-cta">
+          <h3>¿TODAVÍA NO<br>ESTÁS ADENTRO?</h3>
+          <p>Unite a la comunidad más apasionada de fanáticos LEGO en español. Gratis, siempre.</p>
+          <a href="#" class="btn-primary" style="width:100%;text-align:center;display:block;">Crear cuenta gratis</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-name-footer">BRICK<span>VAULT</span></div>
+        <p>Sitio de fans independiente dedicado a la historia, comunidad y cultura LEGO en español.</p>
+        <div class="footer-disclaimer">BRICKVAULT es un sitio de fanáticos independiente. No está afiliado, patrocinado ni respaldado por The LEGO Group. LEGO y el logo LEGO son marcas registradas de The LEGO Group.</div>
+      </div>
+      <div class="footer-col">
+        <h4>Explorar</h4>
+        <ul>
+          <li><a href="#historia">Historia LEGO</a></li>
+          <li><a href="#noticias">Noticias</a></li>
+          <li><a href="#proximos">Próximos Sets</a></li>
+          <li><a href="#">Base de datos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Comunidad</h4>
+        <ul>
+          <li><a href="#comunidad">Foro</a></li>
+          <li><a href="#">MOCs Destacados</a></li>
+          <li><a href="#">Reviews</a></li>
+          <li><a href="#">Top Constructores</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Servicios</h4>
+        <ul>
+          <li><a href="#">Comprar Sets</a></li>
+          <li><a href="#">Vender / Tradear</a></li>
+          <li><a href="#">Piezas Sueltas</a></li>
+          <li><a href="https://www.lego.com" target="_blank">LEGO.com Oficial ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 BrickVault — Hecho con 🧱 y pasión</div>
+      <div class="footer-copy">Prototipo v1.0</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Menú hamburguesa ──────────────────────────────────────
+  function closeMobileMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+
+  // ── Buscador ──────────────────────────────────────────────
+  var activeDest = 'brickset';
+
+  var SETS_ICONICOS = [
+    { num:'75192', name:'Millennium Falcon',       year:2017, pieces:7541,  img:'https://cdn.rebrickable.com/media/sets/75192-1.jpg', theme:'Star Wars' },
+    { num:'10276', name:'Colosseum',               year:2020, pieces:9036,  img:'https://cdn.rebrickable.com/media/sets/10276-1.jpg', theme:'Icons' },
+    { num:'10307', name:'Torre Eiffel',            year:2022, pieces:10001, img:'https://cdn.rebrickable.com/media/sets/10307-1.jpg', theme:'Icons' },
+    { num:'42083', name:'Bugatti Chiron',          year:2018, pieces:3599,  img:'https://cdn.rebrickable.com/media/sets/42083-1.jpg', theme:'Technic' },
+    { num:'21037', name:'LEGO House',              year:2017, pieces:774,   img:'https://cdn.rebrickable.com/media/sets/21037-1.jpg', theme:'Architecture' },
+    { num:'10179', name:'UCS Millennium Falcon',   year:2007, pieces:5195,  img:'https://cdn.rebrickable.com/media/sets/10179-1.jpg', theme:'Star Wars' },
+    { num:'42115', name:'Lamborghini Sián',        year:2020, pieces:3696,  img:'https://cdn.rebrickable.com/media/sets/42115-1.jpg', theme:'Technic' },
+    { num:'10030', name:'Imperial Star Destroyer', year:2002, pieces:3104,  img:'https://cdn.rebrickable.com/media/sets/10030-1.jpg', theme:'Star Wars' },
+    { num:'926',   name:'Space Command Center',    year:1979, pieces:235,   img:'https://cdn.rebrickable.com/media/sets/926-1.jpg',   theme:'Space' },
+    { num:'375',   name:'Yellow Castle',           year:1978, pieces:766,   img:'https://cdn.rebrickable.com/media/sets/375-1.jpg',   theme:'Castle' },
+    { num:'10497', name:'Galaxy Explorer',         year:2022, pieces:1254,  img:'https://cdn.rebrickable.com/media/sets/10497-1.jpg', theme:'Icons' },
+    { num:'42056', name:'Porsche 911 GT3 RS',      year:2016, pieces:2704,  img:'https://cdn.rebrickable.com/media/sets/42056-1.jpg', theme:'Technic' },
+  ];
+
+  function getSearchURL(query) {
+    var q = encodeURIComponent(query);
+    if (activeDest === 'brickset')  return 'https://brickset.com/sets/query-' + q;
+    if (activeDest === 'lego')      return 'https://www.lego.com/es-ar/search?q=' + q;
+    if (activeDest === 'youtube')   return 'https://www.youtube.com/results?search_query=LEGO+' + q + '+review';
+    return 'https://www.google.com/search?q=LEGO+set+' + q;
+  }
+
+  function doSearch() {
+    var val = document.getElementById('setSearch').value.trim();
+    if (!val) {
+      document.getElementById('searchInfo').innerHTML =
+        '<span style="color:var(--red);">✏️ Escribí un nombre o número de set para buscar.</span>';
+      return;
+    }
+    window.open(getSearchURL(val), '_blank');
+    document.getElementById('searchInfo').innerHTML =
+      'Buscando <strong>"' + val + '"</strong> → abriendo resultados en nueva pestaña.';
+  }
+
+  function setDest(el, dest) {
+    activeDest = dest;
+    document.querySelectorAll('.dest-btn').forEach(function(b){ b.classList.remove('active'); });
+    el.classList.add('active');
+  }
+
+  function renderIconicos() {
+    var grid = document.getElementById('setsGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    SETS_ICONICOS.forEach(function(s) {
+      var card = document.createElement('div');
+      card.className = 'set-card';
+      card.style.cursor = 'pointer';
+      card.title = 'Buscar ' + s.name;
+      card.onclick = function() {
+        document.getElementById('setSearch').value = s.num + ' ' + s.name;
+        doSearch();
+      };
+      card.innerHTML =
+        '<div class="set-visual" style="background:#FFD700;position:relative;overflow:hidden;">' +
+          '<div class="stud-over"></div>' +
+          '<img src="' + s.img + '" alt="' + s.name + '" ' +
+            'style="width:100%;height:100%;object-fit:contain;padding:10px;position:relative;z-index:1;" ' +
+            'onerror="this.style.display='none'" loading="lazy">' +
+        '</div>' +
+        '<div class="set-body">' +
+          '<div class="set-num">#' + s.num + ' · ' + s.theme + ' · ' + s.year + '</div>' +
+          '<div class="set-name">' + s.name + '</div>' +
+          '<div class="set-info">' +
+            '<span class="set-pieces">🧱 ' + s.pieces.toLocaleString() + ' piezas</span>' +
+          '</div>' +
+          '<div style="margin-top:0.75rem;font-size:0.72rem;color:var(--red);font-weight:800;letter-spacing:1px;text-transform:uppercase;">' +
+            'Clickeá para buscar →' +
+          '</div>' +
+        '</div>';
+      grid.appendChild(card);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Hamburguesa
+    document.getElementById('hamburger').addEventListener('click', function() {
+      this.classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    });
+    window.addEventListener('scroll', function() {
+      if (document.getElementById('mobileMenu').classList.contains('open')) closeMobileMenu();
+    }, { passive: true });
+
+    // Buscador
+    document.getElementById('searchBtn').addEventListener('click', doSearch);
+    document.getElementById('setSearch').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') doSearch();
+    });
+
+    // Sets icónicos
+    renderIconicos();
+  });
+</script>
+
+</body>
+</html>
