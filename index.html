@@ -966,7 +966,27 @@
   .set-price { font-weight: 800; color: var(--red); font-size: 1.1rem; }
   .set-release { font-size: 0.73rem; color: var(--blue); margin-top: 0.5rem; font-weight: 700; }
 
-  .dest-btn {
+  .tab-btn {
+    background: white;
+    border: 3px solid var(--mid-gray);
+    border-radius: 6px;
+    padding: 10px 18px;
+    font-family: 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--mid-gray);
+    transition: all 0.15s;
+    color: var(--muted);
+  }
+  .tab-btn:hover, .tab-btn.active {
+    background: var(--red);
+    border-color: var(--red-dark);
+    color: white;
+    box-shadow: 0 4px 0 var(--red-dark);
+  }
     background: white;
     border: 3px solid var(--mid-gray);
     border-radius: 6px;
@@ -1522,9 +1542,10 @@
     <ul class="nav-links">
       <li><a href="#historia">Historia</a></li>
       <li><a href="#noticias">Noticias</a></li>
-      <li><a href="#proximos">Próximos Sets</a></li>
+      <li><a href="#proximos">Sets</a></li>
       <li><a href="#servicios">Servicios</a></li>
       <li><a href="#comunidad">Comunidad</a></li>
+      <li><a href="#impresion3d">🖨️ 3D</a></li>
       <li><a href="#comunidad" class="nav-cta">Unirse</a></li>
     </ul>
     <button class="hamburger" id="hamburger" aria-label="Menú">
@@ -1540,6 +1561,7 @@
   <a href="#proximos" class="menu-link">🗓️ Sets</a>
   <a href="#servicios" class="menu-link">⚙️ Servicios</a>
   <a href="#comunidad" class="menu-link">🤝 Comunidad</a>
+  <a href="#impresion3d" class="menu-link">🖨️ Impresión 3D</a>
   <a href="#comunidad" class="menu-link">Unirse gratis →</a>
 </div>
 
@@ -2010,6 +2032,265 @@
   </div>
 </section>
 
+<!-- IMPRESIÓN 3D -->
+<section id="impresion3d" style="background: white;">
+  <div class="container">
+
+    <!-- AVISO LEGAL DESTACADO -->
+    <div style="
+      background: #FFF8E1;
+      border: 3px solid #FFD700;
+      border-left: 8px solid #E3000B;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 5px 0 #E6B800;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    ">
+      <div style="font-size:2rem; flex-shrink:0;">⚠️</div>
+      <div>
+        <div style="font-family: Impact, 'Arial Black', sans-serif; font-size:1rem; letter-spacing:2px; text-transform:uppercase; color:#E3000B; margin-bottom:0.4rem;">
+          Aviso importante — Solo para reparación personal
+        </div>
+        <div style="font-size:0.85rem; color:#555; line-height:1.7;">
+          Los archivos compartidos en esta sección están destinados <strong>exclusivamente a la reparación de sets dañados o con piezas faltantes de uso personal</strong>. No reemplazan ni compiten con los productos oficiales de LEGO®. No se permite la distribución comercial de piezas impresas. Esta comunidad no tiene afiliación con The LEGO Group.
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">🖨️ Impresión 3D</div>
+    <h2 class="section-title">REPARACIÓN<br>CON IMPRESIÓN 3D</h2>
+    <p class="section-desc">Compartí y descargá archivos de diseño para reponer piezas rotas o perdidas de tus sets. Solo para uso personal de reparación.</p>
+
+    <!-- TABS -->
+    <div style="display:flex; gap:0.5rem; margin-top:2.5rem; margin-bottom:2rem; flex-wrap:wrap;">
+      <button class="tab-btn active" onclick="showTab('explorar')">🔍 Explorar diseños</button>
+      <button class="tab-btn" onclick="showTab('subir')">⬆️ Compartir diseño</button>
+      <button class="tab-btn" onclick="showTab('guia')">📖 Guía de impresión</button>
+    </div>
+
+    <!-- TAB: EXPLORAR -->
+    <div id="tab-explorar">
+      <!-- Filtros -->
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem; align-items:center;">
+        <span style="font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);">Filtrar:</span>
+        <button class="filter-chip active" onclick="filterPiezas(this,'todas')">Todas</button>
+        <button class="filter-chip" onclick="filterPiezas(this,'technic')">Technic</button>
+        <button class="filter-chip" onclick="filterPiezas(this,'city')">City</button>
+        <button class="filter-chip" onclick="filterPiezas(this,'clasica')">Clásica</button>
+        <button class="filter-chip" onclick="filterPiezas(this,'tren')">Trenes</button>
+        <button class="filter-chip" onclick="filterPiezas(this,'duplo')">Duplo</button>
+      </div>
+
+      <!-- Grid de piezas -->
+      <div class="sets-grid" id="piezasGrid">
+
+        <div class="set-card" data-cat="technic">
+          <div class="set-visual" style="background: linear-gradient(135deg, #006CB7, #0088E0);">
+            <div class="stud-over"></div>
+            <div style="font-size:3rem; position:relative; z-index:1;">⚙️</div>
+          </div>
+          <div class="set-body">
+            <div class="set-num">Technic · Pin conector</div>
+            <div class="set-name">Pin de fricción 3L</div>
+            <div style="font-size:0.8rem; color:var(--muted); margin:0.4rem 0;">Compatibilidad: sets Technic post-2010</div>
+            <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap;">
+              <span style="background:var(--off-white);border:2px solid var(--mid-gray);border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;">PLA · 0.2mm</span>
+              <span style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;color:#2E7D32;">✓ Probado</span>
+            </div>
+            <a href="#" class="btn-primary" style="display:block;text-align:center;margin-top:0.85rem;padding:8px;font-size:0.8rem;">⬇️ Descargar STL</a>
+          </div>
+        </div>
+
+        <div class="set-card" data-cat="tren">
+          <div class="set-visual" style="background: linear-gradient(135deg, #E3000B, #FF4444);">
+            <div class="stud-over"></div>
+            <div style="font-size:3rem; position:relative; z-index:1;">🚂</div>
+          </div>
+          <div class="set-body">
+            <div class="set-num">Trenes · Rueda</div>
+            <div class="set-name">Rueda de tren clásica</div>
+            <div style="font-size:0.8rem; color:var(--muted); margin:0.4rem 0;">Compatibilidad: sets de tren 4.5V y 9V</div>
+            <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap;">
+              <span style="background:var(--off-white);border:2px solid var(--mid-gray);border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;">PLA · 0.1mm</span>
+              <span style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;color:#2E7D32;">✓ Probado</span>
+            </div>
+            <a href="#" class="btn-primary" style="display:block;text-align:center;margin-top:0.85rem;padding:8px;font-size:0.8rem;">⬇️ Descargar STL</a>
+          </div>
+        </div>
+
+        <div class="set-card" data-cat="clasica">
+          <div class="set-visual" style="background: linear-gradient(135deg, #FFD700, #FFA000);">
+            <div class="stud-over"></div>
+            <div style="font-size:3rem; position:relative; z-index:1;">🧱</div>
+          </div>
+          <div class="set-body">
+            <div class="set-num">Clásica · Ladrillo</div>
+            <div class="set-name">Ladrillo 2x4 estándar</div>
+            <div style="font-size:0.8rem; color:var(--muted); margin:0.4rem 0;">Universal — compatible con todos los sets</div>
+            <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap;">
+              <span style="background:var(--off-white);border:2px solid var(--mid-gray);border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;">PLA/ABS · 0.2mm</span>
+              <span style="background:#FFF8E1;border:2px solid #FFE082;border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;color:#F57F17;">⚡ Popular</span>
+            </div>
+            <a href="#" class="btn-primary" style="display:block;text-align:center;margin-top:0.85rem;padding:8px;font-size:0.8rem;">⬇️ Descargar STL</a>
+          </div>
+        </div>
+
+        <div class="set-card" data-cat="city">
+          <div class="set-visual" style="background: linear-gradient(135deg, #00A650, #00C860);">
+            <div class="stud-over"></div>
+            <div style="font-size:3rem; position:relative; z-index:1;">🏠</div>
+          </div>
+          <div class="set-body">
+            <div class="set-num">City · Ventana</div>
+            <div class="set-name">Marco de ventana 1x4</div>
+            <div style="font-size:0.8rem; color:var(--muted); margin:0.4rem 0;">Compatibilidad: sets City y Creator</div>
+            <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap;">
+              <span style="background:var(--off-white);border:2px solid var(--mid-gray);border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;">PETG · 0.15mm</span>
+              <span style="background:#E3F2FD;border:2px solid #90CAF9;border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;color:#1565C0;">🆕 Nuevo</span>
+            </div>
+            <a href="#" class="btn-primary" style="display:block;text-align:center;margin-top:0.85rem;padding:8px;font-size:0.8rem;">⬇️ Descargar STL</a>
+          </div>
+        </div>
+
+        <div class="set-card" data-cat="duplo">
+          <div class="set-visual" style="background: linear-gradient(135deg, #FF8C00, #FFB300);">
+            <div class="stud-over"></div>
+            <div style="font-size:3rem; position:relative; z-index:1;">🐘</div>
+          </div>
+          <div class="set-body">
+            <div class="set-num">Duplo · Figura</div>
+            <div class="set-name">Base de figura Duplo</div>
+            <div style="font-size:0.8rem; color:var(--muted); margin:0.4rem 0;">Compatibilidad: figuras Duplo 1980–2010</div>
+            <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap;">
+              <span style="background:var(--off-white);border:2px solid var(--mid-gray);border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;">PLA · 0.2mm</span>
+              <span style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;color:#2E7D32;">✓ Probado</span>
+            </div>
+            <a href="#" class="btn-primary" style="display:block;text-align:center;margin-top:0.85rem;padding:8px;font-size:0.8rem;">⬇️ Descargar STL</a>
+          </div>
+        </div>
+
+        <div class="set-card" data-cat="technic">
+          <div class="set-visual" style="background: linear-gradient(135deg, #006CB7, #0088E0);">
+            <div class="stud-over"></div>
+            <div style="font-size:3rem; position:relative; z-index:1;">🔩</div>
+          </div>
+          <div class="set-body">
+            <div class="set-num">Technic · Eje</div>
+            <div class="set-name">Eje Technic 8L</div>
+            <div style="font-size:0.8rem; color:var(--muted); margin:0.4rem 0;">Compatibilidad: sets Technic universales</div>
+            <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap;">
+              <span style="background:var(--off-white);border:2px solid var(--mid-gray);border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;">ABS · 0.1mm</span>
+              <span style="background:#FFF8E1;border:2px solid #FFE082;border-radius:4px;padding:3px 10px;font-size:0.72rem;font-weight:700;color:#F57F17;">⚡ Popular</span>
+            </div>
+            <a href="#" class="btn-primary" style="display:block;text-align:center;margin-top:0.85rem;padding:8px;font-size:0.8rem;">⬇️ Descargar STL</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB: SUBIR DISEÑO -->
+    <div id="tab-subir" style="display:none;">
+      <div style="background:var(--off-white); border:3px solid var(--mid-gray); border-radius:8px; padding:2rem; box-shadow:0 6px 0 var(--mid-gray); max-width:700px;">
+        <h3 style="font-family:Impact,'Arial Black',sans-serif; font-size:1.8rem; letter-spacing:2px; margin-bottom:0.5rem;">COMPARTIR UN DISEÑO</h3>
+        <p style="color:var(--muted); font-size:0.88rem; line-height:1.7; margin-bottom:1.5rem;">Antes de compartir, confirmá que el diseño es <strong>solo para reparación personal</strong> y no reproduce exactamente piezas con copyright activo de LEGO.</p>
+
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div>
+            <label style="font-size:0.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">Nombre de la pieza *</label>
+            <input type="text" placeholder="Ej: Pin de fricción Technic 3L" style="width:100%;border:3px solid var(--mid-gray);border-radius:6px;padding:10px 14px;font-size:0.95rem;outline:none;font-family:'Segoe UI',Arial,sans-serif;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">Categoría *</label>
+            <select style="width:100%;border:3px solid var(--mid-gray);border-radius:6px;padding:10px 14px;font-size:0.95rem;outline:none;background:white;font-family:'Segoe UI',Arial,sans-serif;">
+              <option>Technic</option>
+              <option>City / Creator</option>
+              <option>Clásica</option>
+              <option>Trenes</option>
+              <option>Duplo</option>
+              <option>Star Wars</option>
+              <option>Otra</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">Sets compatibles</label>
+            <input type="text" placeholder="Ej: 42083, todos los Technic post-2015" style="width:100%;border:3px solid var(--mid-gray);border-radius:6px;padding:10px 14px;font-size:0.95rem;outline:none;font-family:'Segoe UI',Arial,sans-serif;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">Material recomendado & resolución</label>
+            <input type="text" placeholder="Ej: PLA, 0.2mm, 20% relleno" style="width:100%;border:3px solid var(--mid-gray);border-radius:6px;padding:10px 14px;font-size:0.95rem;outline:none;font-family:'Segoe UI',Arial,sans-serif;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">Notas adicionales</label>
+            <textarea placeholder="Describí el uso, ajustes de tolerancia, tips de impresión..." style="width:100%;border:3px solid var(--mid-gray);border-radius:6px;padding:10px 14px;font-size:0.95rem;outline:none;font-family:'Segoe UI',Arial,sans-serif;height:100px;resize:vertical;"></textarea>
+          </div>
+
+          <!-- Checkbox legal -->
+          <label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;background:#FFF8E1;border:2px solid #FFD700;border-radius:6px;padding:1rem;">
+            <input type="checkbox" id="legalCheck" style="margin-top:3px;flex-shrink:0;width:18px;height:18px;cursor:pointer;">
+            <span style="font-size:0.83rem;color:#555;line-height:1.6;">
+              Confirmo que este diseño es <strong>exclusivamente para uso personal de reparación</strong>, no reproduce literalmente piezas con copyright activo y no será utilizado con fines comerciales.
+            </span>
+          </label>
+
+          <button onclick="submitDesign()" class="btn-primary" style="font-size:1rem;padding:14px;">Enviar diseño para revisión →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: GUÍA -->
+    <div id="tab-guia" style="display:none;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;">
+
+        <div style="background:var(--off-white);border:3px solid var(--mid-gray);border-radius:8px;padding:1.5rem;box-shadow:0 5px 0 var(--mid-gray);">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">🎯</div>
+          <h3 style="font-family:Impact,'Arial Black',sans-serif;font-size:1.3rem;letter-spacing:1px;margin-bottom:0.5rem;">Tolerancias LEGO</h3>
+          <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;">Las piezas LEGO tienen una tolerancia de ±0.01mm. Para impresión 3D funcional recomendamos añadir 0.1–0.2mm de tolerancia en los puntos de encastre (studs y tubos internos).</p>
+        </div>
+
+        <div style="background:var(--off-white);border:3px solid var(--mid-gray);border-radius:8px;padding:1.5rem;box-shadow:0 5px 0 var(--mid-gray);">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">🧵</div>
+          <h3 style="font-family:Impact,'Arial Black',sans-serif;font-size:1.3rem;letter-spacing:1px;margin-bottom:0.5rem;">Materiales recomendados</h3>
+          <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;"><strong>PLA:</strong> Ideal para piezas decorativas y estructurales livianas.<br><strong>ABS:</strong> Mejor resistencia al calor, similar al plástico original.<br><strong>PETG:</strong> Buena flexibilidad, ideal para clips y conectores.</p>
+        </div>
+
+        <div style="background:var(--off-white);border:3px solid var(--mid-gray);border-radius:8px;padding:1.5rem;box-shadow:0 5px 0 var(--mid-gray);">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">⚙️</div>
+          <h3 style="font-family:Impact,'Arial Black',sans-serif;font-size:1.3rem;letter-spacing:1px;margin-bottom:0.5rem;">Configuración de impresión</h3>
+          <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;">Resolución de capa: 0.1–0.2mm. Relleno: 20–40% para piezas funcionales. Temperatura de cama: 60°C (PLA) / 100°C (ABS). Velocidad: 40–60mm/s para mayor precisión.</p>
+        </div>
+
+        <div style="background:var(--off-white);border:3px solid var(--mid-gray);border-radius:8px;padding:1.5rem;box-shadow:0 5px 0 var(--mid-gray);">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">📐</div>
+          <h3 style="font-family:Impact,'Arial Black',sans-serif;font-size:1.3rem;letter-spacing:1px;margin-bottom:0.5rem;">Unidad base LEGO</h3>
+          <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;">La unidad LEGO (LDU) = 0.4mm. Un stud estándar tiene 4.8mm de diámetro exterior y 1.8mm de altura. La separación entre centros de studs es 8mm. Usá estas medidas como referencia en tu slicer.</p>
+        </div>
+
+        <div style="background:var(--off-white);border:3px solid var(--mid-gray);border-radius:8px;padding:1.5rem;box-shadow:0 5px 0 var(--mid-gray);">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">🔗</div>
+          <h3 style="font-family:Impact,'Arial Black',sans-serif;font-size:1.3rem;letter-spacing:1px;margin-bottom:0.5rem;">Recursos externos</h3>
+          <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;">
+            <a href="https://www.thingiverse.com/search?q=lego" target="_blank" style="color:var(--red);font-weight:700;">Thingiverse — LEGO ↗</a><br>
+            <a href="https://www.printables.com/search/models?q=lego+brick" target="_blank" style="color:var(--red);font-weight:700;">Printables — LEGO bricks ↗</a><br>
+            <a href="https://ldraw.org" target="_blank" style="color:var(--red);font-weight:700;">LDraw — Estándar de diseño ↗</a>
+          </p>
+        </div>
+
+        <div style="background:#FFF8E1;border:3px solid #FFD700;border-radius:8px;padding:1.5rem;box-shadow:0 5px 0 #E6B800;">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">⚠️</div>
+          <h3 style="font-family:Impact,'Arial Black',sans-serif;font-size:1.3rem;letter-spacing:1px;margin-bottom:0.5rem;">Aviso legal</h3>
+          <p style="color:#555;font-size:0.85rem;line-height:1.7;">Los diseños compartidos aquí son para <strong>reparación personal</strong> únicamente. LEGO® es marca registrada de The LEGO Group, que no patrocina ni avala esta sección. No reproducir ni comercializar piezas impresas.</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="container">
@@ -2088,7 +2369,32 @@
     { num:'42056', name:'Porsche 911 GT3 RS',      year:2016, pieces:2704,  img:'https://cdn.rebrickable.com/media/sets/42056-1.jpg', theme:'Technic' },
   ];
 
-  function getSearchURL(query) {
+  function showTab(tab) {
+    ['explorar','subir','guia'].forEach(function(t) {
+      var el = document.getElementById('tab-' + t);
+      if (el) el.style.display = t === tab ? 'block' : 'none';
+    });
+    document.querySelectorAll('.tab-btn').forEach(function(b, i) {
+      b.classList.toggle('active', ['explorar','subir','guia'][i] === tab);
+    });
+  }
+
+  function filterPiezas(el, cat) {
+    document.querySelectorAll('.filter-chip').forEach(function(c){ c.classList.remove('active'); });
+    el.classList.add('active');
+    document.querySelectorAll('#piezasGrid .set-card').forEach(function(card) {
+      card.style.display = (cat === 'todas' || card.getAttribute('data-cat') === cat) ? '' : 'none';
+    });
+  }
+
+  function submitDesign() {
+    var check = document.getElementById('legalCheck');
+    if (!check || !check.checked) {
+      alert('Debés aceptar el aviso legal antes de enviar.');
+      return;
+    }
+    alert('¡Gracias! Tu diseño fue enviado para revisión. Lo publicaremos en 24-48hs si cumple las condiciones.');
+  }
     var q = encodeURIComponent(query);
     if (activeDest === 'brickset')  return 'https://brickset.com/sets/query-' + q;
     if (activeDest === 'lego')      return 'https://www.lego.com/es-ar/search?q=' + q;
