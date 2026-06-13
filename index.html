@@ -1844,16 +1844,16 @@
       <!-- DESTINOS DE BÚSQUEDA -->
       <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap;">
         <span style="font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);align-self:center;">Buscar en:</span>
-        <button class="dest-btn active" data-dest="brickset" onclick="setDest(this,'brickset')">
+        <button class="dest-btn active" data-dest="brickset">
           🗃️ Brickset
         </button>
-        <button class="dest-btn" data-dest="lego" onclick="setDest(this,'lego')">
+        <button class="dest-btn" data-dest="lego">
           🟥 LEGO.com
         </button>
-        <button class="dest-btn" data-dest="google" onclick="setDest(this,'google')">
+        <button class="dest-btn" data-dest="google">
           🔎 Google
         </button>
-        <button class="dest-btn" data-dest="youtube" onclick="setDest(this,'youtube')">
+        <button class="dest-btn" data-dest="youtube">
           ▶️ YouTube Reviews
         </button>
       </div>
@@ -2066,9 +2066,9 @@
 
     <!-- TABS -->
     <div style="display:flex; gap:0.5rem; margin-top:2.5rem; margin-bottom:2rem; flex-wrap:wrap;">
-      <button class="tab-btn active" onclick="showTab('explorar')">🔍 Explorar diseños</button>
-      <button class="tab-btn" onclick="showTab('subir')">⬆️ Compartir diseño</button>
-      <button class="tab-btn" onclick="showTab('guia')">📖 Guía de impresión</button>
+      <button class="tab-btn active" data-tab="explorar">🔍 Explorar diseños</button>
+      <button class="tab-btn" data-tab="subir">⬆️ Compartir diseño</button>
+      <button class="tab-btn" data-tab="guia">📖 Guía de impresión</button>
     </div>
 
     <!-- TAB: EXPLORAR -->
@@ -2076,12 +2076,12 @@
       <!-- Filtros -->
       <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem; align-items:center;">
         <span style="font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);">Filtrar:</span>
-        <button class="filter-chip active" onclick="filterPiezas(this,'todas')">Todas</button>
-        <button class="filter-chip" onclick="filterPiezas(this,'technic')">Technic</button>
-        <button class="filter-chip" onclick="filterPiezas(this,'city')">City</button>
-        <button class="filter-chip" onclick="filterPiezas(this,'clasica')">Clásica</button>
-        <button class="filter-chip" onclick="filterPiezas(this,'tren')">Trenes</button>
-        <button class="filter-chip" onclick="filterPiezas(this,'duplo')">Duplo</button>
+        <button class="filter-chip active" data-cat="todas">Todas</button>
+        <button class="filter-chip" data-cat="technic">Technic</button>
+        <button class="filter-chip" data-cat="city">City</button>
+        <button class="filter-chip" data-cat="clasica">Clásica</button>
+        <button class="filter-chip" data-cat="tren">Trenes</button>
+        <button class="filter-chip" data-cat="duplo">Duplo</button>
       </div>
 
       <!-- Grid de piezas -->
@@ -2236,7 +2236,7 @@
             </span>
           </label>
 
-          <button onclick="submitDesign()" class="btn-primary" style="font-size:1rem;padding:14px;">Enviar diseño para revisión →</button>
+          <button id="submitDesignBtn" class="btn-primary" style="font-size:1rem;padding:14px;">Enviar diseño para revisión →</button>
         </div>
       </div>
     </div>
@@ -2455,7 +2455,8 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    // Hamburguesa
+
+    // ── Hamburguesa ──────────────────────────────────────
     var hamburgerBtn = document.getElementById('hamburger');
     var mobileMenuEl = document.getElementById('mobileMenu');
 
@@ -2465,6 +2466,76 @@
         var isOpen = mobileMenuEl && mobileMenuEl.classList.contains('open');
         if (isOpen) { closeMobileMenu(); } else { openMobileMenu(); }
       });
+    }
+
+    document.addEventListener('click', function(e) {
+      if (mobileMenuEl && mobileMenuEl.classList.contains('open')) {
+        if (!mobileMenuEl.contains(e.target) && e.target !== hamburgerBtn && !hamburgerBtn.contains(e.target)) {
+          closeMobileMenu();
+        }
+      }
+    });
+
+    document.querySelectorAll('.menu-link').forEach(function(link) {
+      link.addEventListener('click', function() { closeMobileMenu(); });
+    });
+
+    window.addEventListener('scroll', function() {
+      if (mobileMenuEl && mobileMenuEl.classList.contains('open')) closeMobileMenu();
+    }, { passive: true });
+
+    // ── Buscador de sets ──────────────────────────────────
+    var searchBtn = document.getElementById('searchBtn');
+    var searchInput = document.getElementById('setSearch');
+
+    if (searchBtn) {
+      searchBtn.addEventListener('click', doSearch);
+    }
+    if (searchInput) {
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doSearch();
+      });
+    }
+
+    // Botones destino de búsqueda
+    document.querySelectorAll('.dest-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() { setDest(this, this.getAttribute('data-dest')); });
+    });
+
+    // ── Sets icónicos ─────────────────────────────────────
+    renderIconicos();
+
+    // ── Tabs sección 3D ───────────────────────────────────
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        showTab(this.getAttribute('data-tab'));
+      });
+    });
+
+    // ── Filtros piezas 3D ────────────────────────────────
+    document.querySelectorAll('#piezasGrid ~ div .filter-chip, #tab-explorar .filter-chip').forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        filterPiezas(this, this.getAttribute('data-cat'));
+      });
+    });
+
+    // Wire filter chips dentro de tab-explorar
+    var explorarTab = document.getElementById('tab-explorar');
+    if (explorarTab) {
+      explorarTab.querySelectorAll('.filter-chip').forEach(function(chip) {
+        chip.addEventListener('click', function() {
+          filterPiezas(this, this.getAttribute('data-cat'));
+        });
+      });
+    }
+
+    // ── Submit diseño ─────────────────────────────────────
+    var submitBtn = document.getElementById('submitDesignBtn');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', submitDesign);
+    }
+
+  });
     }
 
     // Cerrar al tocar fuera del menú
