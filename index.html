@@ -2336,8 +2336,7 @@
 </footer>
 
 <script>
-  // ── Menú hamburguesa ──────────────────────────────────────
-  // Hamburger — definido globalmente para que esté disponible siempre
+  // ── Menú hamburguesa ─────────────────────────────────────
   function closeMobileMenu() {
     var m = document.getElementById('mobileMenu');
     var h = document.getElementById('hamburger');
@@ -2369,32 +2368,7 @@
     { num:'42056', name:'Porsche 911 GT3 RS',      year:2016, pieces:2704,  img:'https://cdn.rebrickable.com/media/sets/42056-1.jpg', theme:'Technic' },
   ];
 
-  function showTab(tab) {
-    ['explorar','subir','guia'].forEach(function(t) {
-      var el = document.getElementById('tab-' + t);
-      if (el) el.style.display = t === tab ? 'block' : 'none';
-    });
-    document.querySelectorAll('.tab-btn').forEach(function(b, i) {
-      b.classList.toggle('active', ['explorar','subir','guia'][i] === tab);
-    });
-  }
-
-  function filterPiezas(el, cat) {
-    document.querySelectorAll('.filter-chip').forEach(function(c){ c.classList.remove('active'); });
-    el.classList.add('active');
-    document.querySelectorAll('#piezasGrid .set-card').forEach(function(card) {
-      card.style.display = (cat === 'todas' || card.getAttribute('data-cat') === cat) ? '' : 'none';
-    });
-  }
-
-  function submitDesign() {
-    var check = document.getElementById('legalCheck');
-    if (!check || !check.checked) {
-      alert('Debés aceptar el aviso legal antes de enviar.');
-      return;
-    }
-    alert('¡Gracias! Tu diseño fue enviado para revisión. Lo publicaremos en 24-48hs si cumple las condiciones.');
-  }
+  function getSearchURL(query) {
     var q = encodeURIComponent(query);
     if (activeDest === 'brickset')  return 'https://brickset.com/sets/query-' + q;
     if (activeDest === 'lego')      return 'https://www.lego.com/es-ar/search?q=' + q;
@@ -2436,9 +2410,9 @@
       card.innerHTML =
         '<div class="set-visual" style="background:#FFD700;position:relative;overflow:hidden;">' +
           '<div class="stud-over"></div>' +
-          '<img src="' + s.img + '" alt="' + s.name + '" ' +
+          '<img src="' + s.img + '" alt="' + s.name + '" loading="lazy" ' +
             'style="width:100%;height:100%;object-fit:contain;padding:10px;position:relative;z-index:1;" ' +
-            'onerror="this.style.display='none'" loading="lazy">' +
+            'onerror="this.style.display='none'">' +
         '</div>' +
         '<div class="set-body">' +
           '<div class="set-num">#' + s.num + ' · ' + s.theme + ' · ' + s.year + '</div>' +
@@ -2454,20 +2428,50 @@
     });
   }
 
+  // ── Tabs sección 3D ───────────────────────────────────────
+  function showTab(tab) {
+    ['explorar','subir','guia'].forEach(function(t) {
+      var el = document.getElementById('tab-' + t);
+      if (el) el.style.display = t === tab ? 'block' : 'none';
+    });
+    document.querySelectorAll('.tab-btn').forEach(function(b) {
+      b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+    });
+  }
+
+  function filterPiezas(el, cat) {
+    document.querySelectorAll('#piezasGrid .filter-chip').forEach(function(c){ c.classList.remove('active'); });
+    el.classList.add('active');
+    document.querySelectorAll('#piezasGrid .set-card').forEach(function(card) {
+      card.style.display = (cat === 'todas' || card.getAttribute('data-cat') === cat) ? '' : 'none';
+    });
+  }
+
+  function submitDesign() {
+    var check = document.getElementById('legalCheck');
+    if (!check || !check.checked) {
+      alert('Debés aceptar el aviso legal antes de enviar.');
+      return;
+    }
+    alert('¡Gracias! Tu diseño fue enviado para revisión. Lo publicaremos en 24-48hs si cumple las condiciones.');
+  }
+
+  // ── DOMContentLoaded — un único bloque ───────────────────
   document.addEventListener('DOMContentLoaded', function() {
 
-    // ── Hamburguesa ──────────────────────────────────────
+    // Hamburguesa
     var hamburgerBtn = document.getElementById('hamburger');
     var mobileMenuEl = document.getElementById('mobileMenu');
-
     if (hamburgerBtn) {
       hamburgerBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        var isOpen = mobileMenuEl && mobileMenuEl.classList.contains('open');
-        if (isOpen) { closeMobileMenu(); } else { openMobileMenu(); }
+        if (mobileMenuEl && mobileMenuEl.classList.contains('open')) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
       });
     }
-
     document.addEventListener('click', function(e) {
       if (mobileMenuEl && mobileMenuEl.classList.contains('open')) {
         if (!mobileMenuEl.contains(e.target) && e.target !== hamburgerBtn && !hamburgerBtn.contains(e.target)) {
@@ -2475,98 +2479,46 @@
         }
       }
     });
-
     document.querySelectorAll('.menu-link').forEach(function(link) {
       link.addEventListener('click', function() { closeMobileMenu(); });
     });
-
-    window.addEventListener('scroll', function() {
-      if (mobileMenuEl && mobileMenuEl.classList.contains('open')) closeMobileMenu();
-    }, { passive: true });
-
-    // ── Buscador de sets ──────────────────────────────────
-    var searchBtn = document.getElementById('searchBtn');
-    var searchInput = document.getElementById('setSearch');
-
-    if (searchBtn) {
-      searchBtn.addEventListener('click', doSearch);
-    }
-    if (searchInput) {
-      searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') doSearch();
-      });
-    }
-
-    // Botones destino de búsqueda
-    document.querySelectorAll('.dest-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() { setDest(this, this.getAttribute('data-dest')); });
-    });
-
-    // ── Sets icónicos ─────────────────────────────────────
-    renderIconicos();
-
-    // ── Tabs sección 3D ───────────────────────────────────
-    document.querySelectorAll('.tab-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        showTab(this.getAttribute('data-tab'));
-      });
-    });
-
-    // ── Filtros piezas 3D ────────────────────────────────
-    document.querySelectorAll('#piezasGrid ~ div .filter-chip, #tab-explorar .filter-chip').forEach(function(chip) {
-      chip.addEventListener('click', function() {
-        filterPiezas(this, this.getAttribute('data-cat'));
-      });
-    });
-
-    // Wire filter chips dentro de tab-explorar
-    var explorarTab = document.getElementById('tab-explorar');
-    if (explorarTab) {
-      explorarTab.querySelectorAll('.filter-chip').forEach(function(chip) {
-        chip.addEventListener('click', function() {
-          filterPiezas(this, this.getAttribute('data-cat'));
-        });
-      });
-    }
-
-    // ── Submit diseño ─────────────────────────────────────
-    var submitBtn = document.getElementById('submitDesignBtn');
-    if (submitBtn) {
-      submitBtn.addEventListener('click', submitDesign);
-    }
-
-  });
-    }
-
-    // Cerrar al tocar fuera del menú
-    document.addEventListener('click', function(e) {
-      if (mobileMenuEl && mobileMenuEl.classList.contains('open')) {
-        if (!mobileMenuEl.contains(e.target) && e.target !== hamburgerBtn && !hamburgerBtn.contains(e.target)) {
-          closeMobileMenu();
-        }
-      }
-    });
-
-    // Cerrar al hacer click en cualquier link del menú
-    document.querySelectorAll('.menu-link').forEach(function(link) {
-      link.addEventListener('click', function() {
-        closeMobileMenu();
-      });
-    });
-
-    // Cerrar al hacer scroll
     window.addEventListener('scroll', function() {
       if (mobileMenuEl && mobileMenuEl.classList.contains('open')) closeMobileMenu();
     }, { passive: true });
 
     // Buscador
-    document.getElementById('searchBtn').addEventListener('click', doSearch);
-    document.getElementById('setSearch').addEventListener('keydown', function(e) {
+    var searchBtn = document.getElementById('searchBtn');
+    var searchInput = document.getElementById('setSearch');
+    if (searchBtn) searchBtn.addEventListener('click', doSearch);
+    if (searchInput) searchInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') doSearch();
+    });
+
+    // Destinos de búsqueda
+    document.querySelectorAll('.dest-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() { setDest(this, this.getAttribute('data-dest')); });
     });
 
     // Sets icónicos
     renderIconicos();
+
+    // Tabs 3D
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() { showTab(this.getAttribute('data-tab')); });
+    });
+
+    // Filtros piezas 3D
+    var explorarTab = document.getElementById('tab-explorar');
+    if (explorarTab) {
+      explorarTab.querySelectorAll('.filter-chip').forEach(function(chip) {
+        chip.addEventListener('click', function() { filterPiezas(this, this.getAttribute('data-cat')); });
+      });
+    }
+
+    // Submit diseño
+    var submitBtn = document.getElementById('submitDesignBtn');
+    if (submitBtn) submitBtn.addEventListener('click', submitDesign);
+
   });
 </script>
 
