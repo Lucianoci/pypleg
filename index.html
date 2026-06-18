@@ -1828,13 +1828,13 @@
   <div class="container">
     <div class="section-label">🔍 Base de datos completa</div>
     <h2 class="section-title">BUSCADOR DE<br>SETS LEGO</h2>
-    <p class="section-desc">Buscá cualquier set directamente en la tienda oficial LEGO US.</p>
+    <p class="section-desc">Buscá por nombre o número. Filtra los sets icónicos o abrí LEGO.com US directamente.</p>
 
     <div class="search-bar-wrap" style="margin-top:2rem;">
       <div class="search-bar">
         <div class="search-icon">🔍</div>
         <input class="search-input" id="setSearch" type="text"
-          placeholder="Ej: 75192, Millennium Falcon, Technic Bugatti..."
+          placeholder="Ej: 75192, Millennium Falcon, Technic..."
           autocomplete="off">
         <div class="search-divider"></div>
         <button class="search-btn" id="searchBtn">Buscar</button>
@@ -1842,25 +1842,20 @@
       <div id="searchInfo" style="margin-top:0.75rem;font-size:0.82rem;color:var(--muted);font-weight:600;min-height:1.2em;"></div>
     </div>
 
-    <!-- IFRAME LEGO US -->
-    <div id="legoFrame" style="display:none; margin-top:1.5rem; border:3px solid var(--mid-gray); border-radius:8px; overflow:hidden; box-shadow:0 6px 0 var(--mid-gray);">
-      <div style="background:var(--red); padding:0.6rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
-        <span style="color:white; font-size:0.8rem; font-weight:700; letter-spacing:1px; text-transform:uppercase;">🟥 LEGO.com US — Resultados oficiales</span>
-        <button id="closeFrame" style="background:rgba(0,0,0,0.2); border:none; color:white; padding:4px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:700;">✕ Cerrar</button>
-      </div>
-      <iframe id="legoIframe"
-        src=""
-        style="width:100%; height:600px; border:none; display:block;"
-        title="Resultados LEGO US">
-      </iframe>
-    </div>
-
     <!-- SETS ICÓNICOS -->
-    <div style="margin-top:2.5rem;">
+    <div style="margin-top:2rem;">
       <div style="font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">
-        🏆 Sets icónicos — clickeá para buscar
+        🏆 Sets icónicos
       </div>
       <div id="setsGrid" class="sets-grid"></div>
+
+      <!-- Sin resultados -->
+      <div id="noResults" style="display:none; text-align:center; padding:3rem; background:var(--off-white); border:3px dashed var(--mid-gray); border-radius:8px; margin-top:1rem;">
+        <div style="font-size:3rem; margin-bottom:0.75rem;">🧱</div>
+        <h3 style="font-family:Impact,'Arial Black',sans-serif;font-size:1.6rem;letter-spacing:2px;margin-bottom:0.5rem;">No encontramos ese set acá</h3>
+        <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.5rem;">Buscalo directamente en la tienda oficial</p>
+        <a id="legoSearchLink" href="#" target="_blank" class="btn-primary">Ver en LEGO.com US →</a>
+      </div>
     </div>
 
   </div>
@@ -2362,19 +2357,44 @@
 
   function doSearch() {
     var val = document.getElementById('setSearch').value.trim();
+    var info = document.getElementById('searchInfo');
+    var noResults = document.getElementById('noResults');
+    var legoLink = document.getElementById('legoSearchLink');
+
     if (!val) {
-      document.getElementById('searchInfo').innerHTML =
-        '<span style="color:var(--red);">✏️ Escribí un nombre o número de set para buscar.</span>';
+      // Reset — show all
+      document.querySelectorAll('#setsGrid .set-card').forEach(function(c){ c.style.display = ''; });
+      if (noResults) noResults.style.display = 'none';
+      if (info) info.innerHTML = '';
       return;
     }
-    var url = 'https://www.lego.com/en-us/search?q=' + encodeURIComponent(val);
-    var frame = document.getElementById('legoFrame');
-    var iframe = document.getElementById('legoIframe');
-    iframe.src = url;
-    frame.style.display = 'block';
-    frame.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    document.getElementById('searchInfo').innerHTML =
-      'Mostrando resultados para <strong>"' + val + '"</strong> en LEGO.com US';
+
+    var q = val.toLowerCase().replace(/[áàä]/g,'a').replace(/[éèë]/g,'e')
+               .replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u');
+
+    var cards = document.querySelectorAll('#setsGrid .set-card');
+    var visible = 0;
+    cards.forEach(function(card) {
+      var num  = (card.getAttribute('data-num')  || '').toLowerCase();
+      var name = (card.getAttribute('data-name') || '').toLowerCase()
+                  .replace(/[áàä]/g,'a').replace(/[éèë]/g,'e')
+                  .replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u');
+      if (num.indexOf(q) !== -1 || name.indexOf(q) !== -1) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    if (visible === 0) {
+      if (noResults) noResults.style.display = 'block';
+      if (legoLink) legoLink.href = 'https://www.lego.com/en-us/search?q=' + encodeURIComponent(val);
+      if (info) info.innerHTML = '';
+    } else {
+      if (noResults) noResults.style.display = 'none';
+      if (info) info.innerHTML = 'Mostrando <strong>' + visible + '</strong> set' + (visible !== 1 ? 's' : '') + ' para "<strong>' + val + '</strong>"';
+    }
   }
 
   function renderIconicos() {
@@ -2385,9 +2405,11 @@
       var card = document.createElement('div');
       card.className = 'set-card';
       card.style.cursor = 'pointer';
+      card.setAttribute('data-num', s.num);
+      card.setAttribute('data-name', s.name.toLowerCase());
       card.title = 'Buscar ' + s.name;
       card.onclick = function() {
-        document.getElementById('setSearch').value = s.num + ' ' + s.name;
+        document.getElementById('setSearch').value = s.num;
         doSearch();
       };
             var img = document.createElement('img');
@@ -2482,22 +2504,17 @@
     var searchBtn = document.getElementById('searchBtn');
     var searchInput = document.getElementById('setSearch');
     if (searchBtn) searchBtn.addEventListener('click', doSearch);
-    if (searchInput) searchInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') doSearch();
-    });
+    if (searchInput) {
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doSearch();
+      });
+      searchInput.addEventListener('input', doSearch);
+    }
 
     // Sets icónicos
     renderIconicos();
 
-    // Cerrar iframe
-    var closeFrameBtn = document.getElementById('closeFrame');
-    if (closeFrameBtn) {
-      closeFrameBtn.addEventListener('click', function() {
-        document.getElementById('legoFrame').style.display = 'none';
-        document.getElementById('legoIframe').src = '';
-        document.getElementById('searchInfo').innerHTML = '';
-      });
-    }
+
 
     // Tabs 3D
     document.querySelectorAll('.tab-btn').forEach(function(btn) {
