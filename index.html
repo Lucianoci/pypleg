@@ -1757,7 +1757,7 @@
         <div class="news-img" style="padding:0;">
           <img src="https://cdn.rebrickable.com/media/sets/10497-1.jpg" alt="LEGO Space Classic 2022"
             style="width:100%;height:100%;object-fit:cover;display:block;"
-            onerror="this.style.display='none'; this.parentElement.querySelector('.stud-over').style.display='block'; this.parentElement.querySelector('.news-img-label').style.display='block';" loading="lazy">
+            onerror="this.style.display='none'" loading="lazy">
           <div class="stud-over" style="display:none;"></div>
           <div class="news-img-label" style="display:none;">2025</div>
         </div>
@@ -2407,23 +2407,32 @@
         document.getElementById('setSearch').value = s.num + ' ' + s.name;
         doSearch();
       };
-      card.innerHTML =
-        '<div class="set-visual" style="background:#FFD700;position:relative;overflow:hidden;">' +
-          '<div class="stud-over"></div>' +
-          '<img src="' + s.img + '" alt="' + s.name + '" loading="lazy" ' +
-            'style="width:100%;height:100%;object-fit:contain;padding:10px;position:relative;z-index:1;" ' +
-            'onerror="this.style.display='none'">' +
-        '</div>' +
-        '<div class="set-body">' +
-          '<div class="set-num">#' + s.num + ' · ' + s.theme + ' · ' + s.year + '</div>' +
-          '<div class="set-name">' + s.name + '</div>' +
-          '<div class="set-info">' +
-            '<span class="set-pieces">🧱 ' + s.pieces.toLocaleString() + ' piezas</span>' +
-          '</div>' +
-          '<div style="margin-top:0.75rem;font-size:0.72rem;color:var(--red);font-weight:800;letter-spacing:1px;text-transform:uppercase;">' +
-            'Clickeá para buscar →' +
-          '</div>' +
-        '</div>';
+            var img = document.createElement('img');
+      img.src = s.img;
+      img.alt = s.name;
+      img.loading = 'lazy';
+      img.style.cssText = 'width:100%;height:100%;object-fit:contain;padding:10px;position:relative;z-index:1;';
+      img.addEventListener('error', function(){ this.style.display='none'; });
+
+      card.innerHTML = '';
+      var visual = document.createElement('div');
+      visual.className = 'set-visual';
+      visual.style.cssText = 'background:#FFD700;position:relative;overflow:hidden;';
+      var studOver = document.createElement('div');
+      studOver.className = 'stud-over';
+      visual.appendChild(studOver);
+      visual.appendChild(img);
+
+      var body = document.createElement('div');
+      body.className = 'set-body';
+      body.innerHTML =
+        '<div class="set-num">#' + s.num + ' &middot; ' + s.theme + ' &middot; ' + s.year + '</div>' +
+        '<div class="set-name">' + s.name + '</div>' +
+        '<div class="set-info"><span class="set-pieces">🧱 ' + s.pieces.toLocaleString() + ' piezas</span></div>' +
+        '<div style="margin-top:0.75rem;font-size:0.72rem;color:var(--red);font-weight:800;letter-spacing:1px;text-transform:uppercase;">Clickeá para buscar →</div>';
+
+      card.appendChild(visual);
+      card.appendChild(body);
       grid.appendChild(card);
     });
   }
