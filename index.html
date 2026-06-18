@@ -1828,9 +1828,8 @@
   <div class="container">
     <div class="section-label">🔍 Base de datos completa</div>
     <h2 class="section-title">BUSCADOR DE<br>SETS LEGO</h2>
-    <p class="section-desc">Buscá cualquier set por nombre o número. Te llevamos directo a los resultados.</p>
+    <p class="section-desc">Buscá cualquier set directamente en la tienda oficial LEGO US.</p>
 
-    <!-- BUSCADOR -->
     <div class="search-bar-wrap" style="margin-top:2rem;">
       <div class="search-bar">
         <div class="search-icon">🔍</div>
@@ -1840,28 +1839,23 @@
         <div class="search-divider"></div>
         <button class="search-btn" id="searchBtn">Buscar</button>
       </div>
-
-      <!-- DESTINOS DE BÚSQUEDA -->
-      <div style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap;">
-        <span style="font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);align-self:center;">Buscar en:</span>
-        <button class="dest-btn active" data-dest="brickset">
-          🗃️ Brickset
-        </button>
-        <button class="dest-btn" data-dest="lego">
-          🟥 LEGO.com
-        </button>
-        <button class="dest-btn" data-dest="google">
-          🔎 Google
-        </button>
-        <button class="dest-btn" data-dest="youtube">
-          ▶️ YouTube Reviews
-        </button>
-      </div>
-
-      <div id="searchInfo" style="margin-top:1rem;font-size:0.82rem;color:var(--muted);font-weight:600;min-height:1.2em;"></div>
+      <div id="searchInfo" style="margin-top:0.75rem;font-size:0.82rem;color:var(--muted);font-weight:600;min-height:1.2em;"></div>
     </div>
 
-    <!-- SETS DESTACADOS (estáticos, siempre visibles) -->
+    <!-- IFRAME LEGO US -->
+    <div id="legoFrame" style="display:none; margin-top:1.5rem; border:3px solid var(--mid-gray); border-radius:8px; overflow:hidden; box-shadow:0 6px 0 var(--mid-gray);">
+      <div style="background:var(--red); padding:0.6rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+        <span style="color:white; font-size:0.8rem; font-weight:700; letter-spacing:1px; text-transform:uppercase;">🟥 LEGO.com US — Resultados oficiales</span>
+        <button id="closeFrame" style="background:rgba(0,0,0,0.2); border:none; color:white; padding:4px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:700;">✕ Cerrar</button>
+      </div>
+      <iframe id="legoIframe"
+        src=""
+        style="width:100%; height:600px; border:none; display:block;"
+        title="Resultados LEGO US">
+      </iframe>
+    </div>
+
+    <!-- SETS ICÓNICOS -->
     <div style="margin-top:2.5rem;">
       <div style="font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">
         🏆 Sets icónicos — clickeá para buscar
@@ -2351,8 +2345,6 @@
   }
 
   // ── Buscador ──────────────────────────────────────────────
-  var activeDest = 'brickset';
-
   var SETS_ICONICOS = [
     { num:'75192', name:'Millennium Falcon',       year:2017, pieces:7541,  img:'https://cdn.rebrickable.com/media/sets/75192-1.jpg', theme:'Star Wars' },
     { num:'10276', name:'Colosseum',               year:2020, pieces:9036,  img:'https://cdn.rebrickable.com/media/sets/10276-1.jpg', theme:'Icons' },
@@ -2368,14 +2360,6 @@
     { num:'42056', name:'Porsche 911 GT3 RS',      year:2016, pieces:2704,  img:'https://cdn.rebrickable.com/media/sets/42056-1.jpg', theme:'Technic' },
   ];
 
-  function getSearchURL(query) {
-    var q = encodeURIComponent(query);
-    if (activeDest === 'brickset')  return 'https://brickset.com/sets/query-' + q;
-    if (activeDest === 'lego')      return 'https://www.lego.com/es-ar/search?q=' + q;
-    if (activeDest === 'youtube')   return 'https://www.youtube.com/results?search_query=LEGO+' + q + '+review';
-    return 'https://www.google.com/search?q=LEGO+set+' + q;
-  }
-
   function doSearch() {
     var val = document.getElementById('setSearch').value.trim();
     if (!val) {
@@ -2383,15 +2367,14 @@
         '<span style="color:var(--red);">✏️ Escribí un nombre o número de set para buscar.</span>';
       return;
     }
-    window.open(getSearchURL(val), '_blank');
+    var url = 'https://www.lego.com/en-us/search?q=' + encodeURIComponent(val);
+    var frame = document.getElementById('legoFrame');
+    var iframe = document.getElementById('legoIframe');
+    iframe.src = url;
+    frame.style.display = 'block';
+    frame.scrollIntoView({ behavior: 'smooth', block: 'start' });
     document.getElementById('searchInfo').innerHTML =
-      'Buscando <strong>"' + val + '"</strong> → abriendo resultados en nueva pestaña.';
-  }
-
-  function setDest(el, dest) {
-    activeDest = dest;
-    document.querySelectorAll('.dest-btn').forEach(function(b){ b.classList.remove('active'); });
-    el.classList.add('active');
+      'Mostrando resultados para <strong>"' + val + '"</strong> en LEGO.com US';
   }
 
   function renderIconicos() {
@@ -2503,13 +2486,18 @@
       if (e.key === 'Enter') doSearch();
     });
 
-    // Destinos de búsqueda
-    document.querySelectorAll('.dest-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() { setDest(this, this.getAttribute('data-dest')); });
-    });
-
     // Sets icónicos
     renderIconicos();
+
+    // Cerrar iframe
+    var closeFrameBtn = document.getElementById('closeFrame');
+    if (closeFrameBtn) {
+      closeFrameBtn.addEventListener('click', function() {
+        document.getElementById('legoFrame').style.display = 'none';
+        document.getElementById('legoIframe').src = '';
+        document.getElementById('searchInfo').innerHTML = '';
+      });
+    }
 
     // Tabs 3D
     document.querySelectorAll('.tab-btn').forEach(function(btn) {
